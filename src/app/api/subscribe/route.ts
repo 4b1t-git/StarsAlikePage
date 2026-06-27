@@ -7,13 +7,54 @@ export const dynamic = "force-dynamic";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+// ── Lightweight in-memory rate limiting ─────────────────────────────
+// Per-instance only (resets on cold start / scales per serverless instance),
+// but enough to blunt naive floods. Pair with the honeypot below; for hard
+// guarantees move this to a shared store (Upstash/Redis).
+const WINDOW_MS = 60_000;
+const MAX_REQ = 5;
+const hits = new Map<string, number[]>();
+
+function rateLimited(ip: string): boolean {
+  const now = Date.now();
+  const recent = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
+  recent.push(now);
+  hits.set(ip, recent);
+  // Opportunistic cleanup so the map can't grow unbounded.
+  if (hits.size > 5000) {
+    for (const [k, v] of hits) {
+      if (v.every((t) => now - t > WINDOW_MS)) hits.delete(k);
+    }
+  }
+  return recent.length > MAX_REQ;
+}
+
 export async function POST(req: Request) {
-  let body: { email?: string } = {};
+  const ip =
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    req.headers.get("x-real-ip") ||
+    "unknown";
+
+  if (rateLimited(ip)) {
+    return NextResponse.json(
+      { error: "Demasiados intentos. Esperá un momento." },
+      { status: 429 }
+    );
+  }
+
+  let body: { email?: string; website?: string } = {};
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "Cuerpo inválido" }, { status: 400 });
   }
+
+  // Honeypot: real users never fill this hidden field. Pretend success so bots
+  // get no signal that they were caught.
+  if (body.website && body.website.trim() !== "") {
+    return NextResponse.json({ ok: true });
+  }
+
   const raw = (body.email ?? "").trim().toLowerCase();
   if (!raw || !EMAIL_RE.test(raw) || raw.length > 254) {
     return NextResponse.json({ error: "Correo inválido" }, { status: 400 });
@@ -61,7 +102,9 @@ export async function POST(req: Request) {
     }
   }
 
-  return NextResponse.json({ ok: true, already });
+  // Always return a generic success so the response can't be used to probe
+  // whether a given email is already on the waitlist (enumeration).
+  return NextResponse.json({ ok: true });
 }
 
 function confirmationHtml() {

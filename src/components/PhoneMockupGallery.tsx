@@ -17,6 +17,12 @@ const MOCKUPS: Mockup[] = [
       "Galaxia interactiva: 260 estrellas con física de gravedad, fugaces que caen al agujero negro y soul pairs en espiral cuando se absorben.",
   },
   {
+    variant: "biblioteca",
+    label: "Biblioteca de diarios",
+    caption:
+      "Tu colección personal. Cada diario tiene su propia portada simulada con colores y gradientes. Un compañero hermoso.",
+  },
+  {
     variant: "diario",
     label: "Página con bloques",
     caption:

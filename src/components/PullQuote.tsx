@@ -1,15 +1,15 @@
 const TENETS = [
   {
     n: "01",
-    t: "Sin algoritmo, sin feed. Compartís diarios uno a uno, con quien quieras.",
+    t: "Ni fea ni complicada. Diseñada para ser hermosa, útil desde el día uno y tener muchísima personalidad.",
   },
   {
     n: "02",
-    t: "Capas que se desbloquean con uso: temas, layouts, vault, achievements.",
+    t: "Crece contigo. Desbloqueas nuevas capas de personalización a medida que la usas, volviéndola verdaderamente tuya.",
   },
   {
     n: "03",
-    t: "Tus wikilinks dibujan el grafo. Vos sólo escribís entre [[corchetes]].",
+    t: "Algo duradero. Un compañero para llevar a todas partes, con un toque social sutil para conectar.",
   },
 ];
 

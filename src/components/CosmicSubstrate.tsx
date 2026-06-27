@@ -12,7 +12,7 @@ export default function CosmicSubstrate() {
     >
       <GradientMesh />
       <div className="absolute inset-0">
-        <StarryBackground showBlackHole={false} mode="ambient" />
+        <StarryBackground mode="ambient" />
       </div>
       <GrainOverlay />
       <div

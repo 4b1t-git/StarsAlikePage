@@ -1,14 +1,15 @@
+import Link from "next/link";
 import StarryBackground from "@/components/StarryBackground";
-import BlackHoleVideo from "@/components/BlackHoleVideo";
 import EmailCapture from "@/components/EmailCapture";
 import PhoneMockupGallery from "@/components/PhoneMockupGallery";
-import ConstellationShowcase from "@/components/ConstellationShowcase";
 import MarqueeTags from "@/components/MarqueeTags";
+import ThemeCarousel from "@/components/ThemeCarousel";
 import PullQuote from "@/components/PullQuote";
+import EditorMockup from "@/components/EditorMockup";
 import VerticalTicker from "@/components/VerticalTicker";
 
 const HERO_WORDS = ["Una", "app", "de", "notas"];
-const HERO_WORDS_TWO = ["con", "personalidad."];
+const HERO_WORDS_TWO = ["con", "tu", "personalidad."];
 
 export default function HomePage() {
   return (
@@ -16,13 +17,8 @@ export default function HomePage() {
       {/* HERO ───────────────────────────────────── */}
       <section className="relative min-h-[100svh] overflow-hidden">
         <div className="absolute inset-0">
-          <StarryBackground mode="hero" showBlackHole videoBlackHole />
+          <StarryBackground mode="hero" />
         </div>
-        <BlackHoleVideo />
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-b from-transparent via-cosmos-void/30 to-cosmos-void"
-        />
 
         <VerticalTicker />
 
@@ -30,7 +26,7 @@ export default function HomePage() {
           {/* Top eyebrow */}
           <div className="col-span-12 flex items-center justify-between">
             <p className="eyebrow">STARS ALIKE · ALPHA 2026</p>
-            <p className="hidden font-[family-name:var(--font-pixel)] text-xs tracking-[0.3em] uppercase text-paper-bright/45 sm:block">
+            <p className="hidden font-[family-name:var(--font-pixel)] text-xs tracking-[0.3em] uppercase text-paper-bright/60 sm:block">
               waitlist · android · sin spam
             </p>
           </div>
@@ -54,7 +50,7 @@ export default function HomePage() {
               {HERO_WORDS_TWO.map((w, i) => (
                 <span
                   key={i}
-                  style={{ ["--i" as string]: HERO_WORDS.length + i }}
+                  style={{ ["--i" as string]: i, animationDelay: `${1500 + i * 90}ms` }}
                   className="editorial-italic mr-[0.18em] text-star"
                 >
                   {w}
@@ -64,20 +60,17 @@ export default function HomePage() {
 
             <p
               className="word-reveal mt-8 ml-auto max-w-2xl text-lg sm:text-xl text-paper-bright/75 leading-relaxed"
-              style={{ ["--i" as string]: 6 }}
             >
-              <span>
-                Diarios con bloques. Wikilinks entre páginas. Un grafo que se
-                dibuja con tu uso. Sin algoritmo, sin feed — solo lo que
-                escribís y a quién querés mostrárselo.
+              <span style={{ animationDelay: "1500ms" }}>
+                Una app de notas personales con un sutil toque social.
+                Ni fea ni complicada; diseñada para ser tu compañera,
+                crecer con vos y desbloquear capas de personalización
+                mientras construís algo duradero.
               </span>
             </p>
 
-            <div
-              className="word-reveal mt-10 ml-auto max-w-xl"
-              style={{ ["--i" as string]: 8 }}
-            >
-              <span className="block">
+            <div className="word-reveal mt-10 ml-auto max-w-xl">
+              <span className="block" style={{ animationDelay: "1500ms" }}>
                 <EmailCapture />
               </span>
             </div>
@@ -105,8 +98,8 @@ export default function HomePage() {
       {/* MARQUEE ─────────────────────────────────── */}
       <MarqueeTags />
 
-      {/* CONSTELLATION ──────────────────────────── */}
-      <ConstellationShowcase />
+      {/* THEME CAROUSEL ──────────────────────────── */}
+      <ThemeCarousel />
 
       {/* PHONE GALLERY ──────────────────────────── */}
       <section id="capturas" className="cv-auto relative px-6 py-28 sm:py-36">
@@ -115,24 +108,17 @@ export default function HomePage() {
             <div className="max-w-2xl">
               <p className="eyebrow">CAPTURAS</p>
               <h2 className="mt-3 font-[family-name:var(--font-serif)] font-light text-4xl sm:text-6xl text-paper-bright leading-[1.05] text-balance">
-                Una app entera,
+                Escrituras
                 <br />
-                <span className="editorial-italic text-star">por dentro.</span>
+                <span className="editorial-italic text-star">a tu medida.</span>
               </h2>
             </div>
             <p className="max-w-sm text-paper-bright/65 leading-relaxed">
-              Bienvenida con agujero negro. Galería de diarios con portadas de
-              Unsplash. Editor de bloques. Constelación con backlinks. Tu
-              Historia como cúmulo de estrellas. Vault. Deslizá lateralmente.
+              Un potente editor fluido e intuitivo basado en bloques, pensado para que tus ideas tomen forma sin distracciones. Añade textos, listas y aplica formatos ricos a tu ritmo. Conecta tus pensamientos fácilmente usando wikilinks entre páginas, y observa cómo tus etiquetas cobran vida y enriquecen tu constelación mientras escribes.
             </p>
           </div>
         </div>
-        <PhoneMockupGallery />
-        <div className="mx-auto mt-8 max-w-6xl">
-          <p className="font-[family-name:var(--font-pixel)] text-xs tracking-[0.3em] uppercase text-paper-bright/40">
-            ← deslizá → · 06 capturas
-          </p>
-        </div>
+        <EditorMockup />
       </section>
 
       {/* PULL QUOTE ──────────────────────────────── */}
@@ -199,6 +185,12 @@ export default function HomePage() {
             <p className="mt-1 font-[family-name:var(--font-pixel)] text-xs tracking-[0.3em] uppercase text-paper-bright/50">
               hecho con cariño · 2026
             </p>
+            <Link
+              href="/privacidad"
+              className="mt-3 inline-block font-[family-name:var(--font-pixel)] text-xs tracking-[0.3em] uppercase text-paper-bright/55 underline-offset-4 hover:text-star hover:underline"
+            >
+              privacidad
+            </Link>
           </div>
           <div className="grid grid-cols-2 gap-x-10 gap-y-2 text-xs font-[family-name:var(--font-pixel)] tracking-[0.25em] uppercase text-paper-bright/55 sm:grid-cols-3">
             <span>android · alpha</span>
