@@ -2,6 +2,7 @@ import { memo, type ReactNode } from "react";
 
 export type PhoneVariant =
   | "inicio"
+  | "biblioteca"
   | "diario"
   | "constelacion"
   | "historia"
@@ -234,6 +235,56 @@ function Inicio() {
         >
           entrar
         </text>
+      </g>
+    </>
+  );
+}
+
+function Biblioteca() {
+  const books = [
+    { title: "Personal", color: "#40E0D0" },
+    { title: "Trabajo", color: "#FFD27A" },
+    { title: "Ideas", color: "#93C5FD" },
+    { title: "Viajes", color: "#F472B6" },
+  ];
+  return (
+    <>
+      <rect x={SCREEN_PAD} y={SCREEN_PAD} width={SCREEN_W} height={SCREEN_H} fill="#0A0A0A" />
+      <StatusBar />
+      <text x={SCREEN_PAD + 20} y={SCREEN_PAD + 64} fontFamily="var(--font-serif)" fontSize="24" fontStyle="italic" fill="#F1ECD9">
+        biblioteca
+      </text>
+      <g transform={`translate(${SCREEN_PAD + 20}, ${SCREEN_PAD + 96})`}>
+        {books.map((b, i) => {
+          const col = i % 2;
+          const row = Math.floor(i / 2);
+          const x = col * 114;
+          const y = row * 154;
+          return (
+            <g key={i} transform={`translate(${x}, ${y})`}>
+              {/* Unsplash cover simulation (gradient) */}
+              <defs>
+                <linearGradient id={`grad-${i}`} x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor={b.color} stopOpacity="0.4" />
+                  <stop offset="100%" stopColor="#111" stopOpacity="0.8" />
+                </linearGradient>
+              </defs>
+              <rect width="98" height="124" rx="8" fill={`url(#grad-${i})`} stroke="rgba(255,255,255,0.1)" />
+              <rect width="98" height="124" rx="8" fill="url(#screenGlass)" pointerEvents="none" />
+              <text x="8" y="112" fontFamily="var(--font-sans)" fontSize="12" fontWeight="500" fill="#F1ECD9">
+                {b.title}
+              </text>
+            </g>
+          );
+        })}
+      </g>
+      {/* Bottom Nav */}
+      <g transform={`translate(${SCREEN_PAD}, ${PHONE_H - SCREEN_PAD - 60})`}>
+        <rect width={SCREEN_W} height="60" fill="#0A0A0A" fillOpacity="0.9" />
+        <rect y="-1" width={SCREEN_W} height="1" fill="rgba(255,255,255,0.05)" />
+        {/* Nav items */}
+        <circle cx={SCREEN_W / 4} cy="30" r="4" fill="#40E0D0" />
+        <circle cx={SCREEN_W * 3 / 4} cy="30" r="16" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" />
       </g>
     </>
   );
@@ -760,6 +811,7 @@ function Editor() {
 
 const VARIANTS: Record<PhoneVariant, () => ReactNode> = {
   inicio: Inicio,
+  biblioteca: Biblioteca,
   diario: Diario,
   constelacion: Constelacion,
   historia: Historia,
@@ -781,17 +833,6 @@ function PhoneMockupImpl({ variant, label, caption, index }: Props) {
         <div className="absolute -inset-6 -z-10 rounded-[48px] bg-[radial-gradient(ellipse_at_center,_rgba(64,224,208,0.18)_0%,_transparent_60%)]" />
         <Frame>{render()}</Frame>
       </div>
-      <figcaption className="mt-6 max-w-[260px]">
-        <p className="font-[family-name:var(--font-pixel)] text-[11px] tracking-[0.25em] uppercase text-star/90">
-          {`CAPTURA 0${index + 1} · 06`}
-        </p>
-        <h3 className="mt-2 font-[family-name:var(--font-serif)] italic text-2xl text-paper-bright leading-tight">
-          {label}
-        </h3>
-        <p className="mt-2 text-sm text-paper-bright/65 leading-relaxed">
-          {caption}
-        </p>
-      </figcaption>
     </figure>
   );
 }
