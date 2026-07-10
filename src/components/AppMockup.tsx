@@ -33,22 +33,22 @@ function StatItem({ value, label, accent }: { value: string; label: string; acce
     <div className="flex flex-col items-center">
       <span
         className="font-[family-name:var(--font-serif)] text-[18px] leading-[18px]"
-        style={accent ? { color: "var(--color-star)", fontStyle: "italic" } : { color: "rgba(255,255,255,0.92)" }}
+        style={accent ? { color: "var(--color-star)", fontStyle: "italic" } : { color: "var(--surface-ink)" }}
       >
         {value}
       </span>
-      <span className="mt-[2px] font-[family-name:var(--font-pixel)] text-[10px] tracking-[0.16em] text-white/40">
+      <span className="mt-[2px] font-[family-name:var(--font-pixel)] text-[10px] tracking-[0.16em] text-mockup-ink-ghost">
         {label}
       </span>
     </div>
   );
 }
 
-const StatSep = () => <span className="mx-[12px] h-[22px] w-[0.5px] bg-white/[0.18]" />;
+const StatSep = () => <span className="mx-[12px] h-[22px] w-[0.5px] bg-mockup-panel" />;
 
 function CircleBtn({ children }: { children: React.ReactNode }) {
   return (
-    <span className="flex h-9 w-9 items-center justify-center rounded-full border-[0.5px] border-white/[0.12] bg-white/[0.04] text-white/70">
+    <span className="flex h-9 w-9 items-center justify-center rounded-full border-[0.5px] border-mockup-hairline bg-mockup-panel text-mockup-ink-soft">
       {children}
     </span>
   );
@@ -59,7 +59,7 @@ function SortBtn({ on, children }: { on?: boolean; children: React.ReactNode }) 
   return (
     <span
       className={`flex h-7 w-7 items-center justify-center rounded-[6px] ${
-        on ? "bg-star/15 text-star" : "text-white/40"
+        on ? "bg-star/15 text-star" : "text-mockup-ink-ghost"
       }`}
     >
       {children}
@@ -102,7 +102,7 @@ export function AppMockup({ active = true }: { active?: boolean }) {
   }, []);
 
   return (
-    <div ref={rootRef} className="absolute inset-0 overflow-hidden bg-[#050505] font-[family-name:var(--font-sans)] text-paper-bright">
+    <div ref={rootRef} className="absolute inset-0 overflow-hidden bg-cosmos-void font-[family-name:var(--font-sans)] text-mockup-ink">
       <MockupStarfield active={active} className="absolute inset-0 h-full w-full opacity-80" />
 
       <div
@@ -129,13 +129,13 @@ export function AppMockup({ active = true }: { active?: boolean }) {
             </CircleBtn>
           </span>
 
-          <span className="absolute inset-x-0 bottom-0 h-[120px]" style={{ background: "linear-gradient(to bottom, transparent, #050505)" }} />
+          <span className="absolute inset-x-0 bottom-0 h-[120px]" style={{ background: "linear-gradient(to bottom, color-mix(in srgb, var(--surface-void) 0%, transparent), var(--surface-void) 90%, var(--surface-void) 100%)" }} />
 
           <div className="absolute inset-x-0 bottom-[14px] flex flex-col items-center">
             <span className="font-[family-name:var(--font-serif)] text-[28px] font-light italic tracking-[-0.022em] text-star">
               Diarios
             </span>
-            <div className="mt-[10px] flex items-center rounded-full border-[0.5px] border-white/10 bg-[#050508]/55 px-[14px] py-[8px]">
+            <div className="mt-[10px] flex items-center rounded-full border-[0.5px] border-mockup-hairline bg-cosmos-void/55 px-[14px] py-[8px]">
               <StatItem value="8" label="DIARIOS" />
               <StatSep />
               <StatItem value="72" label="PÁGINAS" />
@@ -147,11 +147,11 @@ export function AppMockup({ active = true }: { active?: boolean }) {
 
         {/* Mode tabs */}
         <div className="mt-[8px] flex justify-center">
-          <div className="inline-flex items-center rounded-full border-[0.5px] border-white/[0.18] bg-[#050508]/55 p-[3px]">
+          <div className="inline-flex items-center rounded-full border-[0.5px] border-mockup-hairline bg-cosmos-void/55 p-[3px]">
             <span className="rounded-full bg-star px-[18px] py-[7px] text-[12px] font-semibold text-cosmos-void">
               Mis diarios
             </span>
-            <span className="rounded-full px-[18px] py-[7px] text-[12px] font-medium text-white/65">
+            <span className="rounded-full px-[18px] py-[7px] text-[12px] font-medium text-mockup-ink-soft">
               Compartidos
             </span>
           </div>
@@ -159,7 +159,7 @@ export function AppMockup({ active = true }: { active?: boolean }) {
 
         {/* Sort + layout strip */}
         <div className="mt-[18px] flex items-center justify-between pl-[74px] pr-[20px]">
-          <div className="flex rounded-[8px] border-[0.5px] border-white/10 bg-white/[0.03] p-[2px]">
+          <div className="flex rounded-[8px] border-[0.5px] border-mockup-hairline bg-mockup-panel p-[2px]">
             <SortBtn on>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="9" />
@@ -176,7 +176,7 @@ export function AppMockup({ active = true }: { active?: boolean }) {
             </SortBtn>
           </div>
 
-          <div className="flex rounded-[8px] border-[0.5px] border-white/10 bg-white/[0.03] p-[2px]">
+          <div className="flex rounded-[8px] border-[0.5px] border-mockup-hairline bg-mockup-panel p-[2px]">
             <SortBtn>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                 <rect x="3" y="3" width="8" height="11" rx="1.5" />
@@ -203,13 +203,13 @@ export function AppMockup({ active = true }: { active?: boolean }) {
 
         {/* Section label */}
         <div className="mt-[16px] flex items-center pl-[74px] pr-[20px]">
-          <span className="font-[family-name:var(--font-pixel)] text-[12px] tracking-[0.21em] text-white/[0.42]">
+          <span className="font-[family-name:var(--font-pixel)] text-[12px] tracking-[0.21em] text-mockup-ink-ghost">
             MIS DIARIOS
           </span>
           <span className="ml-[8px] font-[family-name:var(--font-pixel)] text-[12px] tracking-[0.08em] text-star/75">
             8
           </span>
-          <span className="ml-[10px] h-[0.5px] flex-1 bg-white/10" />
+          <span className="ml-[10px] h-[0.5px] flex-1 bg-mockup-panel" />
         </div>
 
         {/* Grid */}

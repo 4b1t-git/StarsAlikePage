@@ -70,7 +70,7 @@ function Frame({ children }: { children: ReactNode }) {
         rx={SCREEN_R + 6}
         ry={SCREEN_R + 6}
         fill="none"
-        stroke="#2a2a2a"
+        stroke="var(--surface-fog)"
         strokeWidth="1"
       />
 
@@ -93,7 +93,7 @@ function Frame({ children }: { children: ReactNode }) {
         height={SCREEN_H}
         rx={SCREEN_R}
         ry={SCREEN_R}
-        fill="#0A0A0A"
+        fill="var(--surface-deep)"
       />
 
       <g clipPath={`url(#screen-${PHONE_W})`}>{children}</g>
@@ -126,14 +126,14 @@ function Frame({ children }: { children: ReactNode }) {
 
 function StatusBar({ y = SCREEN_PAD + 6 }: { y?: number }) {
   return (
-    <g fontFamily="var(--font-pixel)" fontSize="10" fill="#E8E2CC">
+    <g fontFamily="var(--font-pixel)" fontSize="10" fill="var(--surface-paper-soft)">
       <text x={SCREEN_PAD + 18} y={y + 12}>
         9:41
       </text>
       <g transform={`translate(${PHONE_W - SCREEN_PAD - 38}, ${y + 4})`}>
-        <rect x="0" y="2" width="14" height="8" rx="1.5" fill="none" stroke="#E8E2CC" />
-        <rect x="2" y="4" width="9" height="4" fill="#E8E2CC" />
-        <rect x="16" y="2" width="2" height="8" fill="#E8E2CC" rx="0.5" />
+        <rect x="0" y="2" width="14" height="8" rx="1.5" fill="none" stroke="var(--surface-paper-soft)" />
+        <rect x="2" y="4" width="9" height="4" fill="var(--surface-paper-soft)" />
+        <rect x="16" y="2" width="2" height="8" fill="var(--surface-paper-soft)" rx="0.5" />
       </g>
     </g>
   );
@@ -147,7 +147,7 @@ function Inicio() {
         y={SCREEN_PAD}
         width={SCREEN_W}
         height={SCREEN_H}
-        fill="#050505"
+        fill="var(--surface-void)"
       />
       {/* mini starfield */}
       {Array.from({ length: 42 }).map((_, i) => {
@@ -155,13 +155,13 @@ function Inicio() {
         const y = SCREEN_PAD + ((i * 41) % SCREEN_H);
         const r = ((i * 7) % 5) / 4 + 0.6;
         const op = ((i * 13) % 80) / 100 + 0.2;
-        return <circle key={i} cx={x} cy={y} r={r} fill="#fff" opacity={op} />;
+        return <circle key={i} cx={x} cy={y} r={r} fill="var(--surface-ink)" opacity={op} />;
       })}
       {/* black hole */}
       <g transform={`translate(${PHONE_W * 0.62}, ${PHONE_H * 0.36})`}>
         <circle r="60" fill="url(#bhGrad)" />
         <circle r="14" fill="#000" />
-        <circle r="17" fill="none" stroke="#40E0D0" strokeOpacity="0.6" />
+        <circle r="17" fill="none" stroke="var(--color-star)" strokeOpacity="0.6" />
       </g>
       <defs>
         <radialGradient id="bhGrad">
@@ -180,7 +180,7 @@ function Inicio() {
         fontSize="26"
         fontStyle="italic"
         fontWeight="300"
-        fill="#F1ECD9"
+        fill="var(--surface-paper-bright)"
       >
         stars alike
       </text>
@@ -191,7 +191,7 @@ function Inicio() {
         fontFamily="var(--font-pixel)"
         fontSize="9"
         letterSpacing="2"
-        fill="#40E0D0"
+        fill="var(--color-star)"
       >
         BIENVENIDA
       </text>
@@ -203,7 +203,7 @@ function Inicio() {
           height="38"
           rx="10"
           fill="rgba(64,224,208,0.08)"
-          stroke="#40E0D0"
+          stroke="var(--color-star)"
           strokeOpacity="0.4"
         />
         <text
@@ -211,7 +211,7 @@ function Inicio() {
           y="24"
           fontFamily="var(--font-sans)"
           fontSize="11"
-          fill="#F1ECD9"
+          fill="var(--surface-paper-bright)"
           opacity="0.55"
         >
           tu@correo.com
@@ -222,7 +222,7 @@ function Inicio() {
           width="80"
           height="30"
           rx="8"
-          fill="#40E0D0"
+          fill="var(--color-star)"
         />
         <text
           x={SCREEN_W - 48 - 50}
@@ -231,7 +231,7 @@ function Inicio() {
           fontFamily="var(--font-sans)"
           fontSize="11"
           fontWeight="600"
-          fill="#050505"
+          fill="var(--surface-void)"
         >
           entrar
         </text>
@@ -242,16 +242,16 @@ function Inicio() {
 
 function Biblioteca() {
   const books = [
-    { title: "Personal", color: "#40E0D0" },
+    { title: "Personal", color: "var(--color-star)" },
     { title: "Trabajo", color: "#FFD27A" },
     { title: "Ideas", color: "#93C5FD" },
     { title: "Viajes", color: "#F472B6" },
   ];
   return (
     <>
-      <rect x={SCREEN_PAD} y={SCREEN_PAD} width={SCREEN_W} height={SCREEN_H} fill="#0A0A0A" />
+      <rect x={SCREEN_PAD} y={SCREEN_PAD} width={SCREEN_W} height={SCREEN_H} fill="var(--surface-deep)" />
       <StatusBar />
-      <text x={SCREEN_PAD + 20} y={SCREEN_PAD + 64} fontFamily="var(--font-serif)" fontSize="24" fontStyle="italic" fill="#F1ECD9">
+      <text x={SCREEN_PAD + 20} y={SCREEN_PAD + 64} fontFamily="var(--font-serif)" fontSize="24" fontStyle="italic" fill="var(--surface-paper-bright)">
         biblioteca
       </text>
       <g transform={`translate(${SCREEN_PAD + 20}, ${SCREEN_PAD + 96})`}>
@@ -271,7 +271,7 @@ function Biblioteca() {
               </defs>
               <rect width="98" height="124" rx="8" fill={`url(#grad-${i})`} stroke="rgba(255,255,255,0.1)" />
               <rect width="98" height="124" rx="8" fill="url(#screenGlass)" pointerEvents="none" />
-              <text x="8" y="112" fontFamily="var(--font-sans)" fontSize="12" fontWeight="500" fill="#F1ECD9">
+              <text x="8" y="112" fontFamily="var(--font-sans)" fontSize="12" fontWeight="500" fill="var(--surface-paper-bright)">
                 {b.title}
               </text>
             </g>
@@ -280,10 +280,10 @@ function Biblioteca() {
       </g>
       {/* Bottom Nav */}
       <g transform={`translate(${SCREEN_PAD}, ${PHONE_H - SCREEN_PAD - 60})`}>
-        <rect width={SCREEN_W} height="60" fill="#0A0A0A" fillOpacity="0.9" />
+        <rect width={SCREEN_W} height="60" fill="var(--surface-deep)" fillOpacity="0.9" />
         <rect y="-1" width={SCREEN_W} height="1" fill="rgba(255,255,255,0.05)" />
         {/* Nav items */}
-        <circle cx={SCREEN_W / 4} cy="30" r="4" fill="#40E0D0" />
+        <circle cx={SCREEN_W / 4} cy="30" r="4" fill="var(--color-star)" />
         <circle cx={SCREEN_W * 3 / 4} cy="30" r="16" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" />
       </g>
     </>
@@ -300,7 +300,7 @@ function Diario() {
         y={SCREEN_PAD}
         width={SCREEN_W}
         height={SCREEN_H}
-        fill="#F1ECD9"
+        fill="var(--surface-paper-bright)"
       />
       {/* paper rules */}
       {Array.from({ length: 14 }).map((_, i) => (
@@ -310,7 +310,7 @@ function Diario() {
           x2={SCREEN_PAD + SCREEN_W - 20}
           y1={lineY(i)}
           y2={lineY(i)}
-          stroke="#B8AE8F"
+          stroke="var(--color-paper-rule)"
           strokeOpacity="0.35"
         />
       ))}
@@ -321,7 +321,7 @@ function Diario() {
         fontFamily="var(--font-pixel)"
         fontSize="11"
         letterSpacing="2"
-        fill="#4A4738"
+        fill="var(--color-paper-ink-soft)"
       >
         MAR 14 · 21:38
       </text>
@@ -333,7 +333,7 @@ function Diario() {
         fontSize="22"
         fontStyle="italic"
         fontWeight="400"
-        fill="#26241C"
+        fill="var(--color-paper-ink)"
       >
         carta a mamá
       </text>
@@ -343,7 +343,7 @@ function Diario() {
         y={lineY(0) + 16}
         fontFamily="var(--font-serif)"
         fontSize="13"
-        fill="#26241C"
+        fill="var(--color-paper-ink)"
       >
         <tspan>hoy hablé con </tspan>
         <tspan fill="#93C5FD" fontStyle="italic">[[mamá]]</tspan>
@@ -354,7 +354,7 @@ function Diario() {
         y={lineY(1) + 16}
         fontFamily="var(--font-serif)"
         fontSize="13"
-        fill="#26241C"
+        fill="var(--color-paper-ink)"
       >
         café nuevo y del olor.
       </text>
@@ -363,7 +363,7 @@ function Diario() {
         y={lineY(2) + 16}
         fontFamily="var(--font-serif)"
         fontSize="13"
-        fill="#26241C"
+        fill="var(--color-paper-ink)"
       >
         <tspan>el domingo voy a </tspan>
         <tspan fill="#93C5FD" fontStyle="italic">[[casa]]</tspan>
@@ -375,7 +375,7 @@ function Diario() {
         fontFamily="var(--font-pixel)"
         fontSize="10"
         letterSpacing="1.5"
-        fill="#4A4738"
+        fill="var(--color-paper-ink-soft)"
       >
         ↳ 2 BACKLINKS
       </text>
@@ -386,7 +386,7 @@ function Diario() {
           { c: "#C2A68F", l: "diario" },
         ].map((t, i) => (
           <g key={i} transform={`translate(${i * 76}, 0)`}>
-            <rect width="70" height="22" rx="11" fill="#fff" stroke={t.c} strokeWidth="1" />
+            <rect width="70" height="22" rx="11" fill="var(--surface-ink)" stroke={t.c} strokeWidth="1" />
             <circle cx="11" cy="11" r="4" fill={t.c} />
             <text
               x="22"
@@ -394,7 +394,7 @@ function Diario() {
               fontFamily="var(--font-pixel)"
               fontSize="10"
               letterSpacing="1.5"
-              fill="#4A4738"
+              fill="var(--color-paper-ink-soft)"
             >
               {t.l.toUpperCase()}
             </text>
@@ -429,7 +429,7 @@ function Constelacion() {
         y={SCREEN_PAD}
         width={SCREEN_W}
         height={SCREEN_H}
-        fill="#050505"
+        fill="var(--surface-void)"
       />
       <StatusBar />
       <text
@@ -439,7 +439,7 @@ function Constelacion() {
         fontSize="20"
         fontStyle="italic"
         fontWeight="300"
-        fill="#F1ECD9"
+        fill="var(--surface-paper-bright)"
       >
         constelación
       </text>
@@ -449,7 +449,7 @@ function Constelacion() {
         fontFamily="var(--font-pixel)"
         fontSize="9"
         letterSpacing="2"
-        fill="#40E0D0"
+        fill="var(--color-star)"
       >
         47 NOTAS · 112 VÍNCULOS
       </text>
@@ -465,7 +465,7 @@ function Constelacion() {
               y1={na.y}
               x2={nb.x}
               y2={nb.y}
-              stroke={lit ? "#40E0D0" : "#40E0D0"}
+              stroke={lit ? "var(--color-star)" : "var(--color-star)"}
               strokeOpacity={lit ? 0.9 : 0.2}
               strokeWidth={lit ? 1.2 : 0.7}
             />
@@ -477,7 +477,7 @@ function Constelacion() {
               cx={n.x}
               cy={n.y}
               r={n.r}
-              fill={n.lit ? "#40E0D0" : "#F1ECD9"}
+              fill={n.lit ? "var(--color-star)" : "var(--surface-paper-bright)"}
               opacity={n.lit ? 1 : 0.55}
             />
             {n.lit && (
@@ -486,7 +486,7 @@ function Constelacion() {
                 cy={n.y}
                 r={n.r + 4}
                 fill="none"
-                stroke="#40E0D0"
+                stroke="var(--color-star)"
                 strokeOpacity="0.35"
               />
             )}
@@ -497,7 +497,7 @@ function Constelacion() {
                 fontFamily="var(--font-serif)"
                 fontSize="10"
                 fontStyle="italic"
-                fill="#F1ECD9"
+                fill="var(--surface-paper-bright)"
                 opacity={n.lit ? 0.95 : 0.5}
               >
                 {n.label}
@@ -525,7 +525,7 @@ function Historia() {
         y={SCREEN_PAD}
         width={SCREEN_W}
         height={SCREEN_H}
-        fill="#0A0A0A"
+        fill="var(--surface-deep)"
       />
       <StatusBar />
       <text
@@ -535,7 +535,7 @@ function Historia() {
         fontSize="22"
         fontStyle="italic"
         fontWeight="300"
-        fill="#F1ECD9"
+        fill="var(--surface-paper-bright)"
       >
         tu historia
       </text>
@@ -545,7 +545,7 @@ function Historia() {
         fontFamily="var(--font-pixel)"
         fontSize="9"
         letterSpacing="2"
-        fill="#40E0D0"
+        fill="var(--color-star)"
       >
         2026
       </text>
@@ -556,7 +556,7 @@ function Historia() {
         x2={SCREEN_PAD + 36}
         y1={SCREEN_PAD + 95}
         y2={PHONE_H - 60}
-        stroke="#2A2A2A"
+        stroke="var(--surface-fog)"
         strokeWidth="1"
       />
 
@@ -579,7 +579,7 @@ function Historia() {
             fontFamily="var(--font-serif)"
             fontSize="14"
             fontStyle="italic"
-            fill="#F1ECD9"
+            fill="var(--surface-paper-bright)"
           >
             {it.title}
           </text>
@@ -588,7 +588,7 @@ function Historia() {
             y="28"
             fontFamily="var(--font-sans)"
             fontSize="9"
-            fill="#F1ECD9"
+            fill="var(--surface-paper-bright)"
             opacity="0.45"
           >
             {it.tag}
@@ -607,7 +607,7 @@ function Vault() {
         y={SCREEN_PAD}
         width={SCREEN_W}
         height={SCREEN_H}
-        fill="#050505"
+        fill="var(--surface-void)"
       />
       {/* aurora wash */}
       <defs>
@@ -632,7 +632,7 @@ function Vault() {
         fontFamily="var(--font-pixel)"
         fontSize="9"
         letterSpacing="3"
-        fill="#40E0D0"
+        fill="var(--color-star)"
       >
         VAULT
       </text>
@@ -644,21 +644,21 @@ function Vault() {
         fontSize="20"
         fontStyle="italic"
         fontWeight="300"
-        fill="#F1ECD9"
+        fill="var(--surface-paper-bright)"
       >
         lo íntimo queda íntimo.
       </text>
 
       {/* lock circle */}
       <g transform={`translate(${PHONE_W / 2}, ${PHONE_H / 2 - 20})`}>
-        <circle r="74" fill="none" stroke="#40E0D0" strokeOpacity="0.18" />
-        <circle r="58" fill="none" stroke="#40E0D0" strokeOpacity="0.35" />
-        <circle r="42" fill="#0A0A0A" stroke="#40E0D0" strokeOpacity="0.6" />
+        <circle r="74" fill="none" stroke="var(--color-star)" strokeOpacity="0.18" />
+        <circle r="58" fill="none" stroke="var(--color-star)" strokeOpacity="0.35" />
+        <circle r="42" fill="var(--surface-deep)" stroke="var(--color-star)" strokeOpacity="0.6" />
         <g transform="translate(0, 0)">
-          <rect x="-12" y="-4" width="24" height="22" rx="3" fill="#40E0D0" />
+          <rect x="-12" y="-4" width="24" height="22" rx="3" fill="var(--color-star)" />
           <path
             d="M -7 -4 L -7 -11 A 7 7 0 0 1 7 -11 L 7 -4"
-            stroke="#40E0D0"
+            stroke="var(--color-star)"
             strokeWidth="2.5"
             fill="none"
           />
@@ -669,14 +669,14 @@ function Vault() {
       <g transform={`translate(${SCREEN_PAD + 24}, ${PHONE_H - 130})`}>
         {[1, 2, 3, 4, 5, 6].map((n, i) => (
           <g key={n} transform={`translate(${i * 38}, 0)`}>
-            <circle cx="12" cy="12" r="11" fill="none" stroke="#40E0D0" strokeOpacity="0.35" />
+            <circle cx="12" cy="12" r="11" fill="none" stroke="var(--color-star)" strokeOpacity="0.35" />
             <text
               x="12"
               y="16"
               textAnchor="middle"
               fontFamily="var(--font-pixel)"
               fontSize="12"
-              fill="#F1ECD9"
+              fill="var(--surface-paper-bright)"
             >
               ·
             </text>
@@ -695,7 +695,7 @@ function Editor() {
         y={SCREEN_PAD}
         width={SCREEN_W}
         height={SCREEN_H}
-        fill="#F1ECD9"
+        fill="var(--surface-paper-bright)"
       />
       {Array.from({ length: 14 }).map((_, i) => (
         <line
@@ -704,7 +704,7 @@ function Editor() {
           x2={SCREEN_PAD + SCREEN_W - 18}
           y1={SCREEN_PAD + 130 + i * 26}
           y2={SCREEN_PAD + 130 + i * 26}
-          stroke="#B8AE8F"
+          stroke="var(--color-paper-rule)"
           strokeOpacity="0.35"
         />
       ))}
@@ -715,7 +715,7 @@ function Editor() {
           fontFamily="var(--font-pixel)"
           fontSize="10"
           letterSpacing="2"
-          fill="#4A4738"
+          fill="var(--color-paper-ink-soft)"
         >
           NUEVA NOTA
         </text>
@@ -725,7 +725,7 @@ function Editor() {
         x2={SCREEN_PAD + SCREEN_W - 20}
         y1={SCREEN_PAD + 52}
         y2={SCREEN_PAD + 52}
-        stroke="#B8AE8F"
+        stroke="var(--color-paper-rule)"
         strokeOpacity="0.6"
       />
 
@@ -737,7 +737,7 @@ function Editor() {
         fontSize="24"
         fontStyle="italic"
         fontWeight="400"
-        fill="#26241C"
+        fill="var(--color-paper-ink)"
       >
         idea — café
       </text>
@@ -755,7 +755,7 @@ function Editor() {
           y={SCREEN_PAD + 146 + i * 26}
           fontFamily="var(--font-serif)"
           fontSize="13"
-          fill="#26241C"
+          fill="var(--color-paper-ink)"
         >
           {t}
         </text>
@@ -767,14 +767,14 @@ function Editor() {
         y={SCREEN_PAD + 146 + 3 * 26 - 12}
         width="1.5"
         height="16"
-        fill="#40E0D0"
+        fill="var(--color-star)"
       >
         <animate attributeName="opacity" values="1;0;1" dur="1.1s" repeatCount="indefinite" />
       </rect>
 
       {/* bottom toolbar */}
       <g transform={`translate(${SCREEN_PAD + 18}, ${PHONE_H - 64})`}>
-        <rect width={SCREEN_W - 36} height="36" rx="10" fill="#26241C" />
+        <rect width={SCREEN_W - 36} height="36" rx="10" fill="var(--color-paper-ink)" />
         {["B", "I", "·", "#", "★"].map((g, i) => (
           <text
             key={i}
@@ -783,7 +783,7 @@ function Editor() {
             textAnchor="middle"
             fontFamily="var(--font-serif)"
             fontSize="14"
-            fill="#F1ECD9"
+            fill="var(--surface-paper-bright)"
             fontStyle={g === "I" ? "italic" : "normal"}
             fontWeight={g === "B" ? 700 : 400}
           >
@@ -791,7 +791,7 @@ function Editor() {
           </text>
         ))}
         <g transform={`translate(${SCREEN_W - 36 - 60}, 6)`}>
-          <rect width="52" height="24" rx="6" fill="#40E0D0" />
+          <rect width="52" height="24" rx="6" fill="var(--color-star)" />
           <text
             x="26"
             y="16"
@@ -799,7 +799,7 @@ function Editor() {
             fontFamily="var(--font-sans)"
             fontSize="10"
             fontWeight="700"
-            fill="#26241C"
+            fill="var(--color-paper-ink)"
           >
             GUARDAR
           </text>
