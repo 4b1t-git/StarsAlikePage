@@ -7,6 +7,7 @@ import ThemeCarousel from "@/components/ThemeCarousel";
 import PullQuote from "@/components/PullQuote";
 import EditorMockup from "@/components/EditorMockup";
 import VerticalTicker from "@/components/VerticalTicker";
+import WikilinkExplanation from "@/components/WikilinkExplanation";
 
 const HERO_WORDS = ["Una", "app", "de", "notas"];
 const HERO_WORDS_TWO = ["con", "tu", "personalidad."];
@@ -64,8 +65,8 @@ export default function HomePage() {
               <span style={{ animationDelay: "1500ms" }}>
                 Una app de notas personales con un sutil toque social.
                 Ni fea ni complicada; diseñada para ser tu compañera,
-                crecer con vos y desbloquear capas de personalización
-                mientras construís algo duradero.
+                crecer contigo y desbloquear capas de personalización
+                mientras construyes algo duradero.
               </span>
             </p>
 
@@ -81,10 +82,10 @@ export default function HomePage() {
             {[
               { k: "v 0.1", v: "construyendo despacio" },
               { k: "✦", v: "sin algoritmo, sin feed" },
-              { k: "wikilinks", v: "[[así, entre páginas]]" },
+              { k: "wikilinks", v: <WikilinkExplanation>[[así, entre páginas]]</WikilinkExplanation> },
               { k: "android", v: "ios pronto" },
-            ].map((it) => (
-              <div key={it.v} className="border-t border-cosmos-fog pt-3">
+            ].map((it, idx) => (
+              <div key={idx} className="border-t border-cosmos-fog pt-3">
                 <p className="font-[family-name:var(--font-pixel)] text-xs tracking-[0.3em] uppercase text-star/80">
                   {it.k}
                 </p>
@@ -114,7 +115,7 @@ export default function HomePage() {
               </h2>
             </div>
             <p className="max-w-sm text-paper-bright/65 leading-relaxed">
-              Un potente editor fluido e intuitivo basado en bloques, pensado para que tus ideas tomen forma sin distracciones. Añade textos, listas y aplica formatos ricos a tu ritmo. Conecta tus pensamientos fácilmente usando wikilinks entre páginas, y observa cómo tus etiquetas cobran vida y enriquecen tu constelación mientras escribes.
+              Un potente editor fluido e intuitivo basado en bloques, pensado para que tus ideas tomen forma sin distracciones. Añade textos, listas y aplica formatos ricos a tu ritmo. Conecta tus pensamientos fácilmente usando <WikilinkExplanation>wikilinks</WikilinkExplanation> entre páginas, y observa cómo tus etiquetas cobran vida y enriquecen tu constelación mientras escribes.
             </p>
           </div>
         </div>

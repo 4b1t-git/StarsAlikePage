@@ -12,14 +12,19 @@
 }
 
 @theme inline {
-  --color-cosmos-void: #050505;
-  --color-cosmos-deep: #0A0A0A;
-  --color-cosmos-dust: #141414;
-  --color-cosmos-smoke: #1C1C1C;
-  --color-cosmos-fog: #2A2A2A;
+  --color-cosmos-void: var(--surface-void);
+  --color-cosmos-deep: var(--surface-deep);
+  --color-cosmos-dust: var(--surface-dust);
+  --color-cosmos-smoke: var(--surface-smoke);
+  --color-cosmos-fog: var(--surface-fog);
+  --color-mockup-ink: var(--surface-ink);
+  --color-mockup-ink-soft: var(--surface-ink-soft);
+  --color-mockup-ink-ghost: var(--surface-ink-ghost);
+  --color-mockup-hairline: var(--surface-hairline);
+  --color-mockup-panel: var(--surface-panel);
 
-  --color-paper-bright: #F1ECD9;
-  --color-paper-soft: #E8E2CC;
+  --color-paper-bright: var(--surface-paper-bright);
+  --color-paper-soft: var(--surface-paper-soft);
   --color-paper-edge: #D4CCB0;
   --color-paper-rule: #B8AE8F;
   --color-paper-ink: #26241C;
@@ -39,11 +44,39 @@
 }
 
 :root {
+  --surface-void: #050505;
+  --surface-deep: #0A0A0A;
+  --surface-dust: #141414;
+  --surface-smoke: #1C1C1C;
+  --surface-fog: #2A2A2A;
+  --surface-ink: #FFFFFF;
+  --surface-ink-soft: rgba(255, 255, 255, 0.7);
+  --surface-ink-ghost: rgba(255, 255, 255, 0.4);
+  --surface-hairline: rgba(255, 255, 255, 0.1);
+  --surface-panel: rgba(255, 255, 255, 0.05);
+  --surface-paper-bright: #F1ECD9;
+  --surface-paper-soft: #E8E2CC;
+
   --mesh-1: oklch(0.22 0.08 220);
   --mesh-2: oklch(0.18 0.12 290);
   --mesh-3: oklch(0.16 0.06 180);
   --mesh-4: oklch(0.14 0.10 320);
   --noise-opacity: 0.07;
+}
+
+.mockup-cream {
+  --surface-void: #F0EAD6;
+  --surface-deep: #EAE3CD;
+  --surface-dust: #E7DEC8;
+  --surface-smoke: #F6F1E3;
+  --surface-fog: #FBF7EE;
+  --surface-ink: #211E16;
+  --surface-ink-soft: #5A5443;
+  --surface-ink-ghost: #8A8472;
+  --surface-hairline: rgba(33, 30, 22, 0.13);
+  --surface-panel: rgba(33, 30, 22, 0.05);
+  --surface-paper-bright: #FCFAF3;
+  --surface-paper-soft: #F4EFE1;
 }
 
 @property --gradient-angle {

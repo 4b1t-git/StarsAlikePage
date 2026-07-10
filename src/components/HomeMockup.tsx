@@ -20,7 +20,7 @@ const DESIGN_H = 800;
 const TEAL = "#176B62"; // fixed "Retomar" color from the app (not the accent)
 
 const BOTTOM_WASH =
-  "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(5,5,8,0.88) 100%)";
+  "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(5,5,5,0.9) 100%)";
 
 type Diary = { title: string; meta: string; cover: string };
 
@@ -39,18 +39,18 @@ function StatCell({ value, label, accent }: { value: string; label: string; acce
     <div className="flex flex-col items-center">
       <span
         className="font-[family-name:var(--font-serif)] text-[20px] leading-[23px]"
-        style={accent ? { color: "var(--color-star)", fontStyle: "italic" } : { color: "#fff" }}
+        style={accent ? { color: "var(--color-star)", fontStyle: "italic" } : { color: "var(--surface-ink)" }}
       >
         {value}
       </span>
-      <span className="mt-[3px] font-[family-name:var(--font-pixel)] text-[10px] uppercase leading-[11px] tracking-[0.16em] text-white/40">
+      <span className="mt-[3px] font-[family-name:var(--font-pixel)] text-[10px] uppercase leading-[11px] tracking-[0.16em] text-mockup-ink-ghost">
         {label}
       </span>
     </div>
   );
 }
 
-const StatDivider = () => <span className="h-[24px] w-px bg-white/[0.18]" />;
+const StatDivider = () => <span className="h-[24px] w-px bg-mockup-panel" />;
 
 export function useSyncedAnimationDelay() {
   const [delay, setDelay] = useState("0s");
@@ -140,7 +140,7 @@ export function HomeMockup({ active = true }: { active?: boolean }) {
   return (
     <div
       ref={rootRef}
-      className="absolute inset-0 overflow-hidden bg-[#050505] font-[family-name:var(--font-sans)] text-paper-bright"
+      className="absolute inset-0 overflow-hidden bg-cosmos-void font-[family-name:var(--font-sans)] text-mockup-ink"
     >
       {/* Twinkling starfield — 1:1 port of StarfieldBackground.kt */}
       <MockupStarfield active={active} className="absolute inset-0 h-full w-full opacity-80" />
@@ -162,7 +162,7 @@ export function HomeMockup({ active = true }: { active?: boolean }) {
           <p className="font-[family-name:var(--font-pixel)] text-[12px] tracking-[0.28em] text-star/85">
             ✦ STARS ALIKE ✦
           </p>
-          <h3 className="mt-4 font-[family-name:var(--font-serif)] text-[30px] font-light leading-[31px] text-white">
+          <h3 className="mt-4 font-[family-name:var(--font-serif)] text-[30px] font-light leading-[31px] text-mockup-ink">
             Buenas tardes
           </h3>
           <p className="shimmer-accent mt-2 max-w-[280px] font-[family-name:var(--font-sans)] text-[14px] italic" style={{ animationDelay: useSyncedAnimationDelay() }}>
@@ -170,7 +170,7 @@ export function HomeMockup({ active = true }: { active?: boolean }) {
           </p>
 
           {/* Stats pill */}
-          <div className="mt-[22px] flex items-center gap-[14px] rounded-full border-[0.5px] border-white/10 bg-[#050508]/40 px-[18px] py-[10px] backdrop-blur-sm">
+          <div className="mt-[22px] flex items-center gap-[14px] rounded-full border-[0.5px] border-mockup-hairline bg-cosmos-void/40 px-[18px] py-[10px] backdrop-blur-sm">
             <StatCell value="8" label="DIARIOS" />
             <StatDivider />
             <StatCell value="138" label="PALABRAS" />
@@ -183,10 +183,10 @@ export function HomeMockup({ active = true }: { active?: boolean }) {
 
         {/* Recent diaries header */}
         <div className="mt-[26px] flex items-center pl-[84px] pr-6">
-          <span className="font-[family-name:var(--font-pixel)] text-[12px] tracking-[0.25em] text-white/[0.38]">
+          <span className="font-[family-name:var(--font-pixel)] text-[12px] tracking-[0.25em] text-mockup-ink-ghost">
             ÚLTIMOS DIARIOS
           </span>
-          <span className="ml-[10px] h-px flex-1 bg-white/10" />
+          <span className="ml-[10px] h-px flex-1 bg-mockup-panel" />
         </div>
 
         {/* Recent diaries row (overflows, clipped by the frame like the app) */}
@@ -194,7 +194,7 @@ export function HomeMockup({ active = true }: { active?: boolean }) {
           {DIARIES.map((d) => (
             <button
               key={d.title}
-              className="group relative h-[220px] w-[160px] shrink-0 overflow-hidden rounded-[14px] bg-[#111118] text-left transition-transform duration-300 hover:-translate-y-1"
+              className="group relative h-[220px] w-[160px] shrink-0 overflow-hidden rounded-[14px] bg-cosmos-smoke text-left transition-transform duration-300 hover:-translate-y-1"
             >
               <span className="absolute inset-0" style={{ background: d.cover }} />
               <span className="absolute inset-x-0 bottom-0 h-[110px]" style={{ background: BOTTOM_WASH }} />
@@ -202,7 +202,7 @@ export function HomeMockup({ active = true }: { active?: boolean }) {
                 <span className="line-clamp-2 font-[family-name:var(--font-serif)] text-[16px] font-normal leading-[19px] text-white">
                   {d.title}
                 </span>
-                <span className="mt-1 font-[family-name:var(--font-pixel)] text-[10px] uppercase tracking-wide text-white/55">
+                <span className="mt-1 font-[family-name:var(--font-pixel)] text-[10px] uppercase tracking-wide text-white/65">
                   {d.meta}
                 </span>
               </span>
@@ -242,12 +242,12 @@ export function HomeMockup({ active = true }: { active?: boolean }) {
         </div>
 
         {/* Focus pill, bottom-left — StudyTimerCard.kt collapsed entry */}
-        <button className="absolute bottom-6 left-[84px] z-20 flex h-[56px] w-[148px] items-center gap-2 overflow-hidden rounded-full bg-[#11111B] px-5 shadow-[0_10px_28px_rgba(0,0,0,0.5)] transition-transform active:scale-95">
+        <button className="absolute bottom-6 left-[84px] z-20 flex h-[56px] w-[148px] items-center gap-2 overflow-hidden rounded-full bg-cosmos-smoke px-5 shadow-[0_10px_28px_rgba(0,0,0,0.5)] transition-transform active:scale-95">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-star">
             <circle cx="12" cy="12" r="9" />
             <path d="M12 7.5V12l3 1.8" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          <span className="font-[family-name:var(--font-serif)] text-[14px] font-medium text-white/90">
+          <span className="font-[family-name:var(--font-serif)] text-[14px] font-medium text-mockup-ink-soft">
             Enfoque
           </span>
           <BreathingBorder w={148} h={56} radius={28} />
@@ -273,9 +273,9 @@ export function HomeMockup({ active = true }: { active?: boolean }) {
               onClick={() => setSheetOpen(false)}
               className="absolute inset-0 bg-black/55 backdrop-blur-[2px]"
             />
-            <div className="sheet-up relative w-full rounded-t-3xl bg-[#0E0E18] px-6 pb-10 pt-3 shadow-[0_-20px_60px_rgba(0,0,0,0.6)]">
-              <div className="mx-auto h-1 w-10 rounded-full bg-white/30" />
-              <p className="mt-5 font-[family-name:var(--font-serif)] text-[18px] font-semibold text-white">
+            <div className="sheet-up relative w-full rounded-t-3xl bg-cosmos-fog px-6 pb-10 pt-3 shadow-[0_-20px_60px_rgba(0,0,0,0.6)]">
+              <div className="mx-auto h-1 w-10 rounded-full bg-mockup-panel" />
+              <p className="mt-5 font-[family-name:var(--font-serif)] text-[18px] font-semibold text-mockup-ink">
                 Nota rápida
               </p>
               <button
@@ -284,14 +284,14 @@ export function HomeMockup({ active = true }: { active?: boolean }) {
               >
                 Crear diario rápido
               </button>
-              <p className="mt-5 font-[family-name:var(--font-sans)] text-[12px] font-medium text-white/45">
+              <p className="mt-5 font-[family-name:var(--font-sans)] text-[12px] font-medium text-mockup-ink-ghost">
                 Elegir existente
               </p>
               <div className="no-scrollbar mt-[10px] flex gap-[10px] overflow-x-auto">
                 {DIARIES.slice(0, 6).map((d) => (
                   <div
                     key={d.title}
-                    className="relative h-[130px] w-[100px] shrink-0 overflow-hidden rounded-xl border border-white/[0.08]"
+                    className="relative h-[130px] w-[100px] shrink-0 overflow-hidden rounded-xl border border-mockup-hairline"
                   >
                     <span className="absolute inset-0" style={{ background: d.cover }} />
                     <span className="absolute inset-x-0 bottom-0 h-[60px]" style={{ background: "linear-gradient(to bottom, transparent, rgba(5,5,5,0.93))" }} />

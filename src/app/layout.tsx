@@ -27,7 +27,7 @@ const vt323 = VT323({
 });
 
 const DESCRIPTION =
-  "Diario, Constelación, Tu Historia. Una app de notas que crece con vos. Sin algoritmo, sin feed. Lo importante es lo que dejás escrito.";
+  "Diario, Constelación, Tu Historia. Una app de notas que crece contigo. Sin algoritmo, sin feed. Lo importante es lo que dejas escrito.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

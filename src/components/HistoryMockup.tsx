@@ -21,7 +21,7 @@ export default function HistoryMockup({ active }: { active: boolean }) {
   }, []);
 
   return (
-    <div ref={rootRef} className="absolute inset-0 overflow-hidden bg-[#050505] font-[family-name:var(--font-sans)] text-paper-bright">
+    <div ref={rootRef} className="absolute inset-0 overflow-hidden bg-cosmos-void font-[family-name:var(--font-sans)] text-mockup-ink">
       <MockupStarfield active={active} className="absolute inset-0 h-full w-full opacity-60" />
 
       <div
@@ -38,13 +38,13 @@ export default function HistoryMockup({ active }: { active: boolean }) {
           <p className="font-[family-name:var(--font-pixel)] text-[12px] tracking-[0.28em] text-star/85">
             REGISTRO • CONSTELACIÓN
           </p>
-          <h1 className="mt-4 font-[family-name:var(--font-serif)] text-[56px] font-light leading-[1.1] text-white max-w-[400px]">
+          <h1 className="mt-4 font-[family-name:var(--font-serif)] text-[56px] font-light leading-[1.1] text-mockup-ink max-w-[400px]">
             Tu historia entre estrellas
           </h1>
           
           <div className="mt-8 flex items-center gap-4">
-            <span className="block h-px w-8 bg-white/30" />
-            <p className="font-[family-name:var(--font-serif)] text-[18px] italic text-white/50">
+            <span className="block h-px w-8 bg-mockup-panel" />
+            <p className="font-[family-name:var(--font-serif)] text-[18px] italic text-mockup-ink-ghost">
               9 de 11 luces encendidas
             </p>
           </div>
@@ -54,7 +54,7 @@ export default function HistoryMockup({ active }: { active: boolean }) {
         <div className="absolute inset-0 z-10 pointer-events-none">
           <div className="absolute inset-0 blur-[8px] opacity-40">
             {/* Timeline Container */}
-            <div className="absolute top-[480px] left-[100px] right-0 h-0 border-t-[1.5px] border-white/10 flex">
+            <div className="absolute top-[480px] left-[100px] right-0 h-0 border-t-[1.5px] border-mockup-hairline flex">
               
               {/* Milestone I */}
               <div className="relative flex flex-col items-center w-[300px] -mt-[140px]">
@@ -72,8 +72,8 @@ export default function HistoryMockup({ active }: { active: boolean }) {
                 </div>
 
                 <div className="text-center mt-[45px]">
-                  <h3 className="font-[family-name:var(--font-serif)] text-[32px] text-white">Abrir la app</h3>
-                  <p className="mt-2 font-[family-name:var(--font-serif)] text-[16px] italic text-white/50 max-w-[200px] mx-auto leading-snug">
+                  <h3 className="font-[family-name:var(--font-serif)] text-[32px] text-mockup-ink">Abrir la app</h3>
+                  <p className="mt-2 font-[family-name:var(--font-serif)] text-[16px] italic text-mockup-ink-ghost max-w-[200px] mx-auto leading-snug">
                     Dando los primeros pasos bajo las estrellas.
                   </p>
                 </div>
@@ -92,8 +92,8 @@ export default function HistoryMockup({ active }: { active: boolean }) {
                   <span className="block font-[family-name:var(--font-pixel)] text-[10px] tracking-widest text-star/80">
                     25 • MAY • 2026
                   </span>
-                  <h3 className="mt-4 font-[family-name:var(--font-serif)] text-[32px] text-white leading-tight">Primer diario<br/>creado</h3>
-                  <p className="mt-2 font-[family-name:var(--font-serif)] text-[16px] italic text-white/50 max-w-[200px] mx-auto leading-snug">
+                  <h3 className="mt-4 font-[family-name:var(--font-serif)] text-[32px] text-mockup-ink leading-tight">Primer diario<br/>creado</h3>
+                  <p className="mt-2 font-[family-name:var(--font-serif)] text-[16px] italic text-mockup-ink-ghost max-w-[200px] mx-auto leading-snug">
                     El lugar seguro para guardar los mejores pensamientos.
                   </p>
                 </div>
@@ -107,8 +107,8 @@ export default function HistoryMockup({ active }: { active: boolean }) {
                   <span className="block font-[family-name:var(--font-pixel)] text-[10px] tracking-widest text-star/80">
                     25 • MAY • 2026
                   </span>
-                  <h3 className="mt-4 font-[family-name:var(--font-serif)] text-[32px] text-white leading-tight">Primera página<br/>escrita</h3>
-                  <p className="mt-2 font-[family-name:var(--font-serif)] text-[16px] italic text-white/50 max-w-[220px] mx-auto leading-snug">
+                  <h3 className="mt-4 font-[family-name:var(--font-serif)] text-[32px] text-mockup-ink leading-tight">Primera página<br/>escrita</h3>
+                  <p className="mt-2 font-[family-name:var(--font-serif)] text-[16px] italic text-mockup-ink-ghost max-w-[220px] mx-auto leading-snug">
                     La primera estrella nueva en tu cielo.
                   </p>
                 </div>
@@ -130,8 +130,8 @@ export default function HistoryMockup({ active }: { active: boolean }) {
                   <span className="block font-[family-name:var(--font-pixel)] text-[10px] tracking-widest text-star/80">
                     25 • MAY • 2026
                   </span>
-                  <h3 className="mt-4 font-[family-name:var(--font-serif)] text-[32px] text-white leading-tight">Filtro de<br/>constelación</h3>
-                  <p className="mt-2 font-[family-name:var(--font-serif)] text-[16px] italic text-white/50 max-w-[200px] mx-auto leading-snug">
+                  <h3 className="mt-4 font-[family-name:var(--font-serif)] text-[32px] text-mockup-ink leading-tight">Filtro de<br/>constelación</h3>
+                  <p className="mt-2 font-[family-name:var(--font-serif)] text-[16px] italic text-mockup-ink-ghost max-w-[200px] mx-auto leading-snug">
                     Aprendiste a buscar en el firmamento.
                   </p>
                 </div>
@@ -139,25 +139,25 @@ export default function HistoryMockup({ active }: { active: boolean }) {
             </div>
             
             {/* Date scroller bottom right */}
-            <div className="absolute right-[60px] bottom-[60px] flex items-center gap-4 text-white/30 font-[family-name:var(--font-pixel)] text-[24px]">
+            <div className="absolute right-[60px] bottom-[60px] flex items-center gap-4 text-mockup-ink-ghost font-[family-name:var(--font-pixel)] text-[24px]">
               <span>09</span>
-              <span className="block w-6 h-px bg-white/20" />
-              <span className="text-white">11</span>
+              <span className="block w-6 h-px bg-mockup-panel" />
+              <span className="text-mockup-ink">11</span>
             </div>
           </div>
 
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-auto">
-            <div className="flex flex-col items-center rounded-3xl border border-white/10 bg-[#050508]/60 p-10 shadow-2xl backdrop-blur-xl mt-[160px]">
+            <div className="flex flex-col items-center rounded-3xl border border-mockup-hairline bg-cosmos-void/60 p-10 shadow-2xl backdrop-blur-xl mt-[160px]">
               <svg className="mb-4 text-star" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              <h3 className="font-[family-name:var(--font-serif)] text-[32px] text-white">
+              <h3 className="font-[family-name:var(--font-serif)] text-[32px] text-mockup-ink">
                 Revive tu historia
               </h3>
-              <p className="mt-3 max-w-[320px] text-center font-[family-name:var(--font-sans)] text-[16px] text-white/70">
+              <p className="mt-3 max-w-[320px] text-center font-[family-name:var(--font-sans)] text-[16px] text-mockup-ink-soft">
                 Instala la aplicación para poder recordar tu historia y ver tus hitos bajo las estrellas.
               </p>
-              <button className="mt-8 rounded-full bg-star px-8 py-3.5 font-[family-name:var(--font-sans)] text-[15px] font-semibold text-black shadow-[0_0_20px_var(--color-star)] transition-transform hover:scale-105 active:scale-95">
+              <button className="mt-8 rounded-full bg-star px-8 py-3.5 font-[family-name:var(--font-sans)] text-[15px] font-semibold text-cosmos-void shadow-[0_0_20px_var(--color-star)] transition-transform hover:scale-105 active:scale-95">
                 Descargar aplicación
               </button>
             </div>

@@ -37,6 +37,7 @@ function applyAccent(hex: string) {
 
 export default function ThemeCarousel() {
   const [activeTheme, setActiveTheme] = useState<string>(THEMES[0].id);
+  const [surfaceStyle, setSurfaceStyle] = useState<"cosmos" | "cream">("cosmos");
   const [index, setIndex] = useState(0);
   const [prev, setPrev] = useState<number | null>(null);
   const [dir, setDir] = useState<"down" | "up">("down");
@@ -100,31 +101,62 @@ export default function ThemeCarousel() {
           </div>
 
           {/* Theme Toggles */}
-          <div className="flex items-center gap-4">
-            <span className="font-[family-name:var(--font-pixel)] text-xs tracking-[0.2em] text-paper-bright/60 uppercase">
-              TEMAS:
-            </span>
-            <div className="flex gap-3">
-              {THEMES.map((theme) => (
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-4">
+              <span className="font-[family-name:var(--font-pixel)] text-xs tracking-[0.2em] text-paper-bright/60 uppercase w-16">
+                ACENTO:
+              </span>
+              <div className="flex gap-3">
+                {THEMES.map((theme) => (
+                  <button
+                    key={theme.id}
+                    onClick={() => pick(theme.id, theme.color)}
+                    aria-label={`Aplicar tema ${theme.name}`}
+                    aria-pressed={activeTheme === theme.id}
+                    className={`h-8 w-8 rounded-full transition-transform duration-300 hover:scale-110 active:scale-95 ${
+                      activeTheme === theme.id
+                        ? "ring-2 ring-white/80 ring-offset-2 ring-offset-cosmos-void scale-110"
+                        : "ring-1 ring-white/20 opacity-60 hover:opacity-100"
+                    }`}
+                    style={{ backgroundColor: theme.color }}
+                  />
+                ))}
+              </div>
+            </div>
+            
+            {/* Surface Toggles */}
+            <div className="flex items-center gap-4">
+              <span className="font-[family-name:var(--font-pixel)] text-xs tracking-[0.2em] text-paper-bright/60 uppercase w-16">
+                ESTILO:
+              </span>
+              <div className="flex gap-3 font-[family-name:var(--font-sans)] text-sm">
                 <button
-                  key={theme.id}
-                  onClick={() => pick(theme.id, theme.color)}
-                  aria-label={`Aplicar tema ${theme.name}`}
-                  aria-pressed={activeTheme === theme.id}
-                  className={`h-8 w-8 rounded-full transition-transform duration-300 hover:scale-110 active:scale-95 ${
-                    activeTheme === theme.id
-                      ? "ring-2 ring-white/80 ring-offset-2 ring-offset-cosmos-void scale-110"
-                      : "ring-1 ring-white/20 opacity-60 hover:opacity-100"
+                  onClick={() => setSurfaceStyle("cosmos")}
+                  className={`px-4 py-1.5 rounded-full border transition-all ${
+                    surfaceStyle === "cosmos" 
+                      ? "bg-white text-black border-white" 
+                      : "bg-transparent text-white/60 border-white/20 hover:text-white"
                   }`}
-                  style={{ backgroundColor: theme.color }}
-                />
-              ))}
+                >
+                  Oscuro
+                </button>
+                <button
+                  onClick={() => setSurfaceStyle("cream")}
+                  className={`px-4 py-1.5 rounded-full border transition-all ${
+                    surfaceStyle === "cream" 
+                      ? "bg-white text-black border-white" 
+                      : "bg-transparent text-white/60 border-white/20 hover:text-white"
+                  }`}
+                >
+                  Claro
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Tablet + Phone Container */}
-        <div className="relative mx-auto w-full max-w-[1200px] mt-10">
+        <div className={`relative mx-auto w-full max-w-[1200px] mt-10 mockup-${surfaceStyle}`}>
           
           {/* Left arrow — absolutely positioned to the left of the tablet */}
           <button
@@ -152,7 +184,7 @@ export default function ThemeCarousel() {
           <div className="w-full">
             <TabletFrame>
             <div
-              className="relative aspect-[16/10] w-full overflow-hidden rounded-[16px] bg-[#0A0A0A] sm:rounded-[22px]"
+              className="relative aspect-[16/10] w-full overflow-hidden rounded-[16px] bg-cosmos-void sm:rounded-[22px]"
               onTouchStart={onTouchStart}
               onTouchEnd={onTouchEnd}
             >

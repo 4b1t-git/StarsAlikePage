@@ -40,18 +40,24 @@ function newStar(): Star {
 export default function MockupStarfield({
   className,
   active = true,
+  starCount,
+  starScale = 1,
 }: {
   className?: string;
   /** When false (e.g. a carousel slide that isn't showing), the rAF loop idles
    * so off-screen mockups don't burn frames. */
   active?: boolean;
+  starCount?: number;
+  starScale?: number;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const activeRef = useRef(active);
+  const scaleRef = useRef(starScale);
 
   useEffect(() => {
     activeRef.current = active;
-  }, [active]);
+    scaleRef.current = starScale;
+  }, [active, starScale]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -70,6 +76,16 @@ export default function MockupStarfield({
     let onscreen = true;
     let visible = true;
     const start = performance.now();
+    let currentColorRGB = "255, 255, 255";
+    const updateColor = () => {
+      const colorStr = getComputedStyle(canvas).color;
+      const match = colorStr.match(/\d+,\s*\d+,\s*\d+/);
+      if (match) currentColorRGB = match[0];
+    };
+    
+    // Initial color grab and interval to catch theme changes
+    updateColor();
+    const colorInterval = setInterval(updateColor, 300);
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
@@ -79,7 +95,7 @@ export default function MockupStarfield({
       canvas.height = Math.max(1, Math.round(h * dpr));
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       // (screenHeightDp * 70 / 150) in the app; clamped for the small preview.
-      const count = Math.min(Math.max(Math.round((h * 70) / 150), 120), 360);
+      const count = starCount ?? Math.min(Math.max(Math.round((h * 70) / 150), 120), 360);
       if (stars.length !== count) {
         stars = Array.from({ length: count }, newStar);
       }
@@ -93,8 +109,8 @@ export default function MockupStarfield({
           Math.max(0.05, s.baseAlpha + Math.sin(f * s.speed) * 0.18)
         );
         ctx.beginPath();
-        ctx.fillStyle = `rgba(255,255,255,${alpha})`;
-        ctx.arc(s.rx * w, s.ry * h, s.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${currentColorRGB}, ${alpha})`;
+        ctx.arc(s.rx * w, s.ry * h, s.radius * scaleRef.current, 0, Math.PI * 2);
         ctx.fill();
       }
     };
@@ -129,6 +145,7 @@ export default function MockupStarfield({
 
     return () => {
       cancelAnimationFrame(raf);
+      clearInterval(colorInterval);
       ro.disconnect();
       io.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);

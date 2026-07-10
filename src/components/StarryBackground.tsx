@@ -104,12 +104,12 @@ export default function StarryBackground({ mode = "hero" }: Props) {
       else if (side === 2) { sx = Math.random() * w; sy = h + 50; tx = Math.random() * w; ty = -50; }
       else { sx = -50; sy = Math.random() * h; tx = w + 50; ty = Math.random() * h; }
       const angle = Math.atan2(ty - sy, tx - sx);
-      const speed = Math.random() * 1 + 1;
+      const speed = (Math.random() * 2 + 4) * 4;
       return {
         x: sx, y: sy,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
-        thickness: Math.random() * 1.5 + 0.5,
+        thickness: Math.random() * 0.8 + 0.3,
         path: [],
         opacity: 1,
       };
@@ -134,7 +134,7 @@ export default function StarryBackground({ mode = "hero" }: Props) {
       const count = ce.detail.count ?? 8;
       for (let i = 0; i < count; i++) {
         const a = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.3;
-        const s = Math.random() * 2 + 3.5;
+        const s = (Math.random() * 2 + 3.5) * 6;
         shooters.push(makeShooterAt(localX, localY, a, s));
       }
     };
@@ -150,9 +150,9 @@ export default function StarryBackground({ mode = "hero" }: Props) {
     };
 
     const scheduleNext = () => {
-      // Super rare: between 15 seconds and 45 seconds
-      const minD = isHero ? 15000 : 20000;
-      const maxD = isHero ? 45000 : 60000;
+      // Shooting stars every 5-15 seconds
+      const minD = isHero ? 5000 : 10000;
+      const maxD = isHero ? 15000 : 25000;
       nextDelay = minD + Math.random() * (maxD - minD);
       lastShoot = performance.now();
     };
@@ -193,7 +193,7 @@ export default function StarryBackground({ mode = "hero" }: Props) {
         s.x += s.vx;
         s.y += s.vy;
         s.path.push({ x: s.x, y: s.y });
-        if (s.path.length > 25) s.path.shift();
+        if (s.path.length > 5) s.path.shift();
 
         if (Math.random() < 0.1) {
           s.opacity = Math.random() * 0.5 + 0.5;
@@ -205,8 +205,8 @@ export default function StarryBackground({ mode = "hero" }: Props) {
           ctx.moveTo(p[0].x, p[0].y);
           for (let i = 1; i < p.length; i++) ctx.lineTo(p[i].x, p[i].y);
           ctx.lineCap = "round";
-          ctx.strokeStyle = `rgba(255,255,255,${0.2 * s.opacity})`;
-          ctx.lineWidth = s.thickness * 4;
+          ctx.strokeStyle = `rgba(255,255,255,${0.15 * s.opacity})`;
+          ctx.lineWidth = s.thickness * 2.5;
           ctx.stroke();
           ctx.strokeStyle = `rgba(255,255,255,${s.opacity})`;
           ctx.lineWidth = s.thickness;
