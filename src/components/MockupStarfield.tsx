@@ -44,8 +44,8 @@ export default function MockupStarfield({
   starScale = 1,
 }: {
   className?: string;
-  /** When false (e.g. a carousel slide that isn't showing), the rAF loop idles
-   * so off-screen mockups don't burn frames. */
+  /** When false (e.g. a carousel slide that isn't showing), its 24fps timer is
+   * stopped completely so off-screen mockups don't burn frames. */
   active?: boolean;
   starCount?: number;
   starScale?: number;
@@ -53,10 +53,12 @@ export default function MockupStarfield({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const activeRef = useRef(active);
   const scaleRef = useRef(starScale);
+  const syncActivityRef = useRef<() => void>(() => undefined);
 
   useEffect(() => {
     activeRef.current = active;
     scaleRef.current = starScale;
+    syncActivityRef.current();
   }, [active, starScale]);
 
   useEffect(() => {
@@ -72,10 +74,12 @@ export default function MockupStarfield({
     let w = 0;
     let h = 0;
     let stars: Star[] = [];
-    let raf = 0;
+    let starsInterval = 0;
+    let colorFrame = 0;
     let onscreen = true;
     let visible = true;
     const start = performance.now();
+    const STAR_FRAME_MS = 1000 / 24;
     let currentColorRGB = "255, 255, 255";
     const updateColor = () => {
       const colorStr = getComputedStyle(canvas).color;
@@ -83,9 +87,8 @@ export default function MockupStarfield({
       if (match) currentColorRGB = match[0];
     };
     
-    // Initial color grab and interval to catch theme changes
+    // Initial color grab; subsequent reads happen only while this canvas draws.
     updateColor();
-    const colorInterval = setInterval(updateColor, 300);
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
@@ -102,6 +105,8 @@ export default function MockupStarfield({
     };
 
     const draw = (f: number) => {
+      colorFrame += 1;
+      if (colorFrame % 8 === 0) updateColor();
       ctx.clearRect(0, 0, w, h);
       for (const s of stars) {
         const alpha = Math.min(
@@ -116,41 +121,68 @@ export default function MockupStarfield({
     };
 
     const step = () => {
-      raf = requestAnimationFrame(step);
-      if (!onscreen || !visible || !activeRef.current) return;
       const f = (performance.now() - start) / 16.6667; // ~60fps frame index
       draw(f);
     };
 
+    const startStars = () => {
+      if (
+        reducedMotion ||
+        starsInterval ||
+        !onscreen ||
+        !visible ||
+        !activeRef.current
+      ) return;
+      step();
+      starsInterval = window.setInterval(step, STAR_FRAME_MS);
+    };
+
+    const stopStars = () => {
+      window.clearInterval(starsInterval);
+      starsInterval = 0;
+    };
+
+    const syncActivity = () => {
+      if (onscreen && visible && activeRef.current) startStars();
+      else stopStars();
+    };
+    syncActivityRef.current = syncActivity;
+
     resize();
-    const ro = new ResizeObserver(resize);
+    const ro = new ResizeObserver(() => {
+      resize();
+      if (reducedMotion) draw(0);
+      else if (onscreen && visible && activeRef.current) step();
+    });
     ro.observe(canvas);
     const io = new IntersectionObserver(
       (entries) => {
         onscreen = entries[0]?.isIntersecting ?? true;
+        syncActivity();
       },
       { rootMargin: "120px" }
     );
     io.observe(canvas);
     const onVisibility = () => {
       visible = !document.hidden;
+      syncActivity();
     };
     document.addEventListener("visibilitychange", onVisibility);
 
     if (reducedMotion) {
       draw(0);
     } else {
-      raf = requestAnimationFrame(step);
+      startStars();
     }
 
     return () => {
-      cancelAnimationFrame(raf);
-      clearInterval(colorInterval);
+      stopStars();
+      syncActivityRef.current = () => undefined;
       ro.disconnect();
       io.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, []);
+  }, [starCount]);
 
   return <canvas ref={canvasRef} aria-hidden="true" className={className} />;
 }

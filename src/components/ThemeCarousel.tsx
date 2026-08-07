@@ -8,14 +8,9 @@ import PhoneShowcase from "./PhoneShowcase";
 import NavRail from "./NavRail";
 import ConstellationMockup from "./ConstellationMockup";
 import HistoryMockup from "./HistoryMockup";
+import { ACCENT_PALETTES } from "@/lib/accentPalettes";
 
-const THEMES = [
-  { id: "cyan", name: "Estelar", color: "#40E0D0" }, // default / brand
-  { id: "ice", name: "Ice", color: "#6FA8FF" },
-  { id: "coral", name: "Coral", color: "#FF9E6B" },
-  { id: "lavender", name: "Lavender", color: "#B392E6" },
-  { id: "aurora", name: "Aurora", color: "#4FD89B" },
-] as const;
+const THEMES = ACCENT_PALETTES;
 
 // App screens shown in the carousel. Add more here as they're built.
 const SCREENS = [
@@ -25,16 +20,6 @@ const SCREENS = [
   { id: "historia", label: "Historia", Component: HistoryMockup },
 ] as const;
 
-/** Push an accent color into the global CSS variables that every `*-star`
- * utility and the custom CSS resolve, retheming the whole page at once. */
-function applyAccent(hex: string) {
-  const root = document.documentElement;
-  root.style.setProperty("--color-star", hex);
-  root.style.setProperty("--color-star-dim", `${hex}cc`);
-  root.style.setProperty("--color-star-soft", `${hex}55`);
-  root.style.setProperty("--color-star-ghost", `${hex}15`);
-}
-
 export default function ThemeCarousel() {
   const [activeTheme, setActiveTheme] = useState<string>(THEMES[0].id);
   const [surfaceStyle, setSurfaceStyle] = useState<"cosmos" | "cream">("cosmos");
@@ -43,11 +28,15 @@ export default function ThemeCarousel() {
   const [dir, setDir] = useState<"down" | "up">("down");
   const touchX = useRef<number | null>(null);
 
-  // Enable smooth accent transitions only after mount (avoids a first-paint
-  // color animation). The default theme matches the SSR colors, so no flash.
+  // Follow the palette currently driving the page-wide choreography.
   useEffect(() => {
-    document.documentElement.classList.add("theme-anim");
-    return () => document.documentElement.classList.remove("theme-anim");
+    const onActive = (event: Event) => {
+      const detail = (event as CustomEvent<{ id?: string }>).detail;
+      if (detail?.id) setActiveTheme(detail.id);
+    };
+
+    window.addEventListener("accent:active", onActive);
+    return () => window.removeEventListener("accent:active", onActive);
   }, []);
 
   // Drop the outgoing slide once its exit animation has finished.
@@ -57,9 +46,13 @@ export default function ThemeCarousel() {
     return () => clearTimeout(t);
   }, [prev, index]);
 
-  function pick(id: string, color: string) {
+  function pick(id: string, themeIndex: number) {
     setActiveTheme(id);
-    applyAccent(color);
+    window.dispatchEvent(
+      new CustomEvent("accent:select", {
+        detail: { id, index: themeIndex },
+      }),
+    );
   }
 
   // Navigate to a screen, slide direction mirrors the app: a later tab slides
@@ -106,11 +99,11 @@ export default function ThemeCarousel() {
               <span className="font-[family-name:var(--font-pixel)] text-xs tracking-[0.2em] text-paper-bright/60 uppercase w-16">
                 ACENTO:
               </span>
-              <div className="flex gap-3">
-                {THEMES.map((theme) => (
+              <div className="flex max-w-[19rem] flex-wrap gap-3">
+                {THEMES.map((theme, themeIndex) => (
                   <button
                     key={theme.id}
-                    onClick={() => pick(theme.id, theme.color)}
+                    onClick={() => pick(theme.id, themeIndex)}
                     aria-label={`Aplicar tema ${theme.name}`}
                     aria-pressed={activeTheme === theme.id}
                     className={`h-8 w-8 rounded-full transition-transform duration-300 hover:scale-110 active:scale-95 ${

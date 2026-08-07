@@ -10,7 +10,7 @@ import VerticalTicker from "@/components/VerticalTicker";
 import WikilinkExplanation from "@/components/WikilinkExplanation";
 
 const HERO_WORDS = ["Una", "app", "de", "notas"];
-const HERO_WORDS_TWO = ["con", "tu", "personalidad."];
+const HERO_COZY_LINE = "con tu personalidad.";
 
 export default function HomePage() {
   return (
@@ -47,16 +47,14 @@ export default function HomePage() {
                   {w}
                 </span>
               ))}
-              <br />
-              {HERO_WORDS_TWO.map((w, i) => (
-                <span
-                  key={i}
-                  style={{ ["--i" as string]: i, animationDelay: `${1500 + i * 90}ms` }}
-                  className="editorial-italic mr-[0.18em] text-star"
-                >
-                  {w}
+              <span
+                className="cozy-phrase-reveal"
+                style={{ animationDelay: "1500ms" }}
+              >
+                <span className="cozy-hero-wipe editorial-italic">
+                  {HERO_COZY_LINE}
                 </span>
-              ))}
+              </span>
             </h1>
 
             <p
