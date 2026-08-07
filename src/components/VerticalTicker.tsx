@@ -1,11 +1,10 @@
 const ITEMS = [
-  "alpha 2026",
+  "disponible ahora",
   "android",
-  "lista de espera",
-  "construido despacio",
   "diseñado a mano",
+  "escribe y conecta",
   "sin algoritmo",
-  "sin spam",
+  "sin feed",
   "stars alike",
 ];
 

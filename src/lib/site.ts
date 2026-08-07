@@ -5,3 +5,8 @@ export const SITE_URL = (
 ).replace(/\/$/, "");
 
 export const SITE_NAME = "Stars Alike";
+
+/** Google Play listing for the production Android application. */
+export const PLAY_STORE_URL =
+  process.env.NEXT_PUBLIC_PLAY_STORE_URL ??
+  "https://play.google.com/store/apps/details?id=com.starsalike";

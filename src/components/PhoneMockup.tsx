@@ -820,7 +820,7 @@ const VARIANTS: Record<PhoneVariant, () => ReactNode> = {
   editor: Editor,
 };
 
-function PhoneMockupImpl({ variant, label, caption, index }: Props) {
+function PhoneMockupImpl({ variant, index }: Props) {
   const render = VARIANTS[variant];
   return (
     <figure

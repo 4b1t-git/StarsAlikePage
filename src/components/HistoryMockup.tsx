@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import MockupStarfield from "./MockupStarfield";
-import { useSyncedAnimationDelay } from "./HomeMockup";
 
 const DESIGN_W = 1280;
 const DESIGN_H = 800;
@@ -8,8 +7,6 @@ const DESIGN_H = 800;
 export default function HistoryMockup({ active }: { active: boolean }) {
   const rootRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
-  const delay = useSyncedAnimationDelay();
-
   // Resize to fit width while maintaining design aspect ratio.
   useEffect(() => {
     const observer = new ResizeObserver((entries) => {

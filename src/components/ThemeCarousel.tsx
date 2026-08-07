@@ -77,19 +77,19 @@ export default function ThemeCarousel() {
   }
 
   return (
-    <section className="cv-auto relative border-y border-cosmos-fog/60 bg-cosmos-void/40 px-6 py-28 backdrop-blur-[2px] sm:py-36">
+    <section id="personalizacion" className="cv-auto relative border-y border-cosmos-fog/60 bg-cosmos-void/40 px-6 py-28 backdrop-blur-[2px] sm:py-36">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
-            <p className="eyebrow">VERSATILIDAD</p>
+            <p className="eyebrow">EN CUALQUIER PANTALLA</p>
             <h2 className="mt-3 font-[family-name:var(--font-serif)] font-light text-4xl sm:text-6xl text-paper-bright leading-[1.05] text-balance">
-              Hecho especialmente para
+              Tu espacio, en
               <br />
-              <span className="editorial-italic text-star">TABLET Y TELÉFONO MÓVIL.</span>
+              <span className="editorial-italic text-star">tablet y teléfono.</span>
             </h2>
             <p className="mt-4 max-w-md text-paper-bright/65 leading-relaxed">
-              Recorre la app y elige un color: el acento cambia en toda la
-              página, no solo en la pantalla. Tu rincón, a tu manera.
+              Recorre sus espacios y elige un color. La interfaz se adapta a
+              ti sin esconder la potencia que hay debajo.
             </p>
           </div>
 
@@ -251,10 +251,10 @@ export default function ThemeCarousel() {
             </span>
           </div>
           
-          <p className="max-w-2xl text-center font-[family-name:var(--font-pixel)] text-[11px] tracking-[0.15em] uppercase leading-relaxed text-paper-bright/35">
-            Los mockups mostrados son representaciones interactivas para previsualizar el concepto de la app y no reflejan fielmente la estética final de la aplicación. Si te interesa la idea, visita{" "}
-            <a href="#hero" className="text-star/60 underline underline-offset-2 hover:text-star transition-colors">Play Store</a>{" "}
-            en el inicio de la página y regístrate para ser de los primeros en probarla.
+          <p className="max-w-2xl text-center text-sm leading-6 text-paper-bright/60">
+            Explora Inicio, Diarios, Constelación e Historia. Cada pantalla
+            comparte el mismo acento y conserva su propia forma de ayudarte a
+            escribir, conectar y recordar.
           </p>
         </div>
       </div>

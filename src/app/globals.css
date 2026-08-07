@@ -106,9 +106,23 @@ html, body {
   background: var(--color-cosmos-void);
   color: #EDEDED;
   font-family: var(--font-sans);
+  font-feature-settings: "liga" 1, "calt" 1;
   cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M12 0 C12 10 14 12 24 12 C14 12 12 14 12 24 C12 14 10 12 0 12 C10 12 12 10 12 0 Z' fill='%23F1ECD9'/></svg>") 12 12, auto;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+section[id] {
+  scroll-margin-top: 6rem;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-star);
+  outline-offset: 4px;
 }
 
 ::selection {
@@ -261,7 +275,7 @@ html, body {
   font-style: italic;
   font-weight: 300;
   font-optical-sizing: auto;
-  font-variation-settings: "opsz" 144, "SOFT" 50;
+  font-variation-settings: "opsz" 144;
 }
 
 .gradient-text {

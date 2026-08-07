@@ -1,93 +1,181 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PLAY_STORE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Privacidad",
+  title: "Política de privacidad",
   description:
-    "Qué datos guarda Stars Alike de la lista de espera y cómo se usan.",
+    "Cómo Stars Alike trata los datos de la aplicación y de este sitio web.",
   robots: { index: true, follow: true },
 };
 
-const UPDATED = "25 de junio de 2026";
+const UPDATED = "7 de agosto de 2026";
 
 export default function PrivacidadPage() {
   return (
     <main className="relative isolate flex-1 px-6 py-28 sm:py-36">
-      <article className="mx-auto max-w-2xl">
+      <article className="mx-auto max-w-3xl">
         <Link
           href="/"
-          className="font-[family-name:var(--font-pixel)] text-xs tracking-[0.3em] uppercase text-star/80 hover:text-star"
+          className="text-sm font-semibold text-star underline-offset-4 hover:underline"
         >
-          ← volver
+          ← Volver a Stars Alike
         </Link>
 
-        <h1 className="mt-8 font-[family-name:var(--font-serif)] font-light text-4xl sm:text-5xl text-paper-bright leading-[1.05]">
-          Privacidad
+        <p className="eyebrow mt-12">STARS ALIKE · PRIVACIDAD</p>
+        <h1 className="mt-4 font-[family-name:var(--font-serif)] text-4xl font-light leading-[1.05] text-paper-bright sm:text-6xl">
+          Política de privacidad
         </h1>
-        <p className="mt-3 font-[family-name:var(--font-pixel)] text-xs tracking-[0.3em] uppercase text-paper-bright/55">
-          Última actualización · {UPDATED}
+        <p className="mt-4 text-sm text-paper-bright/60">
+          Última actualización: {UPDATED}
         </p>
 
-        <div className="mt-10 space-y-8 text-paper-bright/75 leading-relaxed">
+        <div className="mt-12 space-y-12 text-base leading-8 text-paper-bright/75">
           <section>
-            <h2 className="text-paper-bright text-xl font-[family-name:var(--font-serif)]">
-              Qué guardamos
+            <h2 className="font-[family-name:var(--font-serif)] text-2xl text-paper-bright">
+              Alcance y responsable
             </h2>
-            <p className="mt-3">
-              Si te sumás a la lista de espera, guardamos únicamente tu{" "}
-              <strong className="text-paper-bright">correo electrónico</strong> y
-              la fecha en que te anotaste. Nada más. No pedimos nombre, ni
-              teléfono, ni te rastreamos por la web.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-paper-bright text-xl font-[family-name:var(--font-serif)]">
-              Para qué lo usamos
-            </h2>
-            <p className="mt-3">
-              Solo para avisarte el día que la app esté disponible. Es un único
-              correo de confirmación al anotarte y otro el día del lanzamiento.
-              Sin spam, sin newsletters, sin compartir tu correo con terceros
-              para publicidad.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-paper-bright text-xl font-[family-name:var(--font-serif)]">
-              Con qué herramientas
-            </h2>
-            <p className="mt-3">
-              Tu correo se almacena en{" "}
-              <strong className="text-paper-bright">Supabase</strong> (base de
-              datos) y los avisos se envían con{" "}
-              <strong className="text-paper-bright">Resend</strong>. Ambos
-              procesan los datos en nuestro nombre como encargados del
-              tratamiento.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-paper-bright text-xl font-[family-name:var(--font-serif)]">
-              Tus derechos
-            </h2>
-            <p className="mt-3">
-              Podés pedir que borremos tu correo de la lista cuando quieras.
-              Escribinos a{" "}
+            <p className="mt-4">
+              Esta política explica el tratamiento de datos en la aplicación
+              Android Stars Alike y en starsalike.app. El responsable del
+              tratamiento es Stars Alike. Para consultas de privacidad puedes
+              escribir a{" "}
               <a
                 href="mailto:hola@starsalike.app"
-                className="text-star underline-offset-4 hover:underline"
+                className="text-star underline underline-offset-4"
               >
                 hola@starsalike.app
-              </a>{" "}
-              y lo eliminamos sin preguntar nada.
+              </a>
+              .
+            </p>
+          </section>
+
+          <section>
+            <h2 className="font-[family-name:var(--font-serif)] text-2xl text-paper-bright">
+              Datos que trata la aplicación
+            </h2>
+            <ul className="mt-4 list-disc space-y-3 pl-5 marker:text-star">
+              <li>
+                <strong className="text-paper-bright">Cuenta:</strong> el
+                identificador de usuario y los datos básicos proporcionados al
+                iniciar sesión, como correo, nombre visible o imagen de perfil.
+              </li>
+              <li>
+                <strong className="text-paper-bright">Contenido:</strong>
+                diarios, páginas, bloques, etiquetas, imágenes, preferencias y
+                demás contenido que decidas guardar o sincronizar.
+              </li>
+              <li>
+                <strong className="text-paper-bright">Conexiones:</strong>
+                solicitudes, diarios compartidos y señales de presencia
+                necesarias para las funciones colaborativas que actives.
+              </li>
+              <li>
+                <strong className="text-paper-bright">Compras:</strong> estado
+                del producto y datos técnicos de la compra necesarios para
+                verificar y restaurar funciones premium. Google Play procesa el
+                pago; Stars Alike no recibe los datos completos de tu tarjeta.
+              </li>
+              <li>
+                <strong className="text-paper-bright">Diagnóstico:</strong>
+                información técnica sobre fallos, versión de la app y
+                dispositivo para detectar errores y mejorar la estabilidad.
+              </li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="font-[family-name:var(--font-serif)] text-2xl text-paper-bright">
+              Permisos y funciones opcionales
+            </h2>
+            <p className="mt-4">
+              El micrófono se solicita únicamente cuando activas el dictado. El
+              audio es procesado por el servicio de reconocimiento configurado
+              en tu dispositivo, que puede pertenecer a Android o a otro
+              proveedor. Stars Alike utiliza el texto resultante y no guarda una
+              grabación del dictado. Las notificaciones se usan para recordatorios
+              y temporizadores que configuras. Las búsquedas de portadas pueden
+              enviar el término de búsqueda a Unsplash.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="font-[family-name:var(--font-serif)] text-2xl text-paper-bright">
+              Proveedores
+            </h2>
+            <p className="mt-4">
+              Stars Alike utiliza servicios de Google Firebase para
+              autenticación, sincronización, almacenamiento, funciones de
+              servidor, protección de la app y diagnóstico; Google Play para
+              distribución y compras; Unsplash para la búsqueda opcional de
+              imágenes; y Vercel para alojar y medir este sitio.
+            </p>
+            <p className="mt-4">
+              Vercel Web Analytics procesa métricas agregadas de navegación sin
+              cookies de terceros. No vendemos datos personales ni los usamos
+              para publicidad dirigida.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="font-[family-name:var(--font-serif)] text-2xl text-paper-bright">
+              Conservación y eliminación
+            </h2>
+            <p className="mt-4">
+              Conservamos los datos de tu cuenta mientras esta permanezca activa
+              o mientras sean necesarios para prestar el servicio. Desde Ajustes
+              puedes borrar tu actividad o eliminar permanentemente la cuenta,
+              sus diarios, páginas e imágenes y desvincular sus conexiones.
+              También puedes solicitar ayuda mediante el correo de contacto.
+            </p>
+            <p className="mt-4">
+              Algunos proveedores pueden conservar registros técnicos durante
+              sus propios plazos legales o de seguridad. Los datos de compras
+              también están sujetos a las obligaciones de Google Play.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="font-[family-name:var(--font-serif)] text-2xl text-paper-bright">
+              Seguridad y tus decisiones
+            </h2>
+            <p className="mt-4">
+              La aplicación usa acceso autenticado e incorpora Firebase App
+              Check como una señal adicional para verificar solicitudes. Ningún
+              sistema es completamente infalible, por lo que revisamos y
+              actualizamos las medidas de protección junto con la aplicación.
+            </p>
+            <p className="mt-4">
+              Puedes consultar los permisos concedidos desde Android, dejar de
+              usar las funciones opcionales, exportar páginas en PDF y ejercer
+              tus derechos de acceso, corrección o eliminación escribiendo al
+              contacto indicado arriba.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="font-[family-name:var(--font-serif)] text-2xl text-paper-bright">
+              Cambios en esta política
+            </h2>
+            <p className="mt-4">
+              Podemos actualizar esta política cuando cambien las funciones o
+              los proveedores. Publicaremos aquí la nueva fecha de actualización
+              y, cuando corresponda, avisaremos dentro de la aplicación.
             </p>
           </section>
         </div>
 
-        <p className="mt-16 font-[family-name:var(--font-pixel)] text-xs tracking-[0.3em] uppercase text-paper-bright/40">
-          stars alike · hecho con cariño · 2026
-        </p>
+        <div className="mt-16 flex flex-col gap-4 border-t border-white/10 pt-8 sm:flex-row sm:items-center sm:justify-between">
+          <a
+            href={PLAY_STORE_URL}
+            className="font-semibold text-star underline decoration-star/35 underline-offset-4 hover:decoration-star"
+          >
+            Ver Stars Alike en Google Play →
+          </a>
+          <p className="text-sm text-paper-bright/55">
+            stars alike · hecho con cariño · 2026
+          </p>
+        </div>
       </article>
     </main>
   );

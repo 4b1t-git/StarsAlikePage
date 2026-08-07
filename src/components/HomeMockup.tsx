@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import MockupStarfield from "./MockupStarfield";
 
 const DESIGN_W = 1280;
@@ -53,11 +53,12 @@ function StatCell({ value, label, accent }: { value: string; label: string; acce
 const StatDivider = () => <span className="h-[24px] w-px bg-mockup-panel" />;
 
 export function useSyncedAnimationDelay() {
-  const [delay, setDelay] = useState("0s");
-  useEffect(() => {
-    setDelay(`-${Date.now() % 11000}ms`);
-  }, []);
-  return delay;
+  const id = useId();
+  const offset = Array.from(id).reduce(
+    (total, character) => total + character.charCodeAt(0),
+    0,
+  );
+  return `-${(offset * 997) % 11000}ms`;
 }
 
 /**
