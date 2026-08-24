@@ -161,9 +161,10 @@ export default function HomePage() {
             </p>
             <Link
               href="/privacidad"
-              className="mt-3 inline-block font-[family-name:var(--font-pixel)] text-xs tracking-[0.3em] uppercase text-paper-bright/55 underline-offset-4 hover:text-star hover:underline"
+              className="mt-4 inline-flex items-center gap-2 rounded-full border border-star/35 bg-star/[0.06] px-4 py-2 font-[family-name:var(--font-pixel)] text-xs uppercase tracking-[0.2em] text-star transition hover:border-star/70 hover:bg-star/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-star focus-visible:ring-offset-2 focus-visible:ring-offset-cosmos-void"
             >
-              privacidad
+              Política de privacidad
+              <span aria-hidden="true">→</span>
             </Link>
           </div>
           <div className="grid grid-cols-2 gap-x-10 gap-y-2 text-xs font-medium tracking-[0.12em] uppercase text-paper-bright/60 sm:grid-cols-3">
