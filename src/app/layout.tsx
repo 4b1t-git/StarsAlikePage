@@ -3,7 +3,6 @@ import { Fraunces, Inter, VT323 } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import CosmicSubstrate from "@/components/CosmicSubstrate";
-import ScrollProgress from "@/components/ScrollProgress";
 import AccentChoreography from "@/components/AccentChoreography";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -84,7 +83,6 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-cosmos-void text-paper-bright">
         <AccentChoreography />
         <CosmicSubstrate />
-        <ScrollProgress />
 
         {children}
         <Analytics />

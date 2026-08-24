@@ -419,24 +419,6 @@ section[id] {
   display: block;
 }
 
-.scroll-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 2px;
-  width: 100%;
-  transform-origin: 0 50%;
-  background: linear-gradient(90deg, var(--color-star), var(--color-paper-bright));
-  z-index: 60;
-  animation: scrollGrow linear both;
-  animation-timeline: scroll(root);
-}
-
-@keyframes scrollGrow {
-  from { transform: scaleX(0); }
-  to   { transform: scaleX(1); }
-}
-
 .phone-glow {
   filter: drop-shadow(0 30px 60px rgba(0,0,0,0.55)) drop-shadow(0 0 80px var(--color-star-ghost));
 }
