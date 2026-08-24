@@ -1,6 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import {
+  AnimatePresence,
+  motion,
+  useIsPresent,
+  useReducedMotion,
+} from "motion/react";
 import { HomeMockup } from "./HomeMockup";
 import { AppMockup } from "./AppMockup";
 import TabletFrame from "./TabletFrame";
@@ -20,12 +26,62 @@ const SCREENS = [
   { id: "historia", label: "Historia", Component: HistoryMockup },
 ] as const;
 
+type CarouselDirection = "down" | "up";
+type ScreenTransition = {
+  direction: CarouselDirection;
+  reducedMotion: boolean;
+};
+
+const screenVariants = {
+  enter: ({ direction, reducedMotion }: ScreenTransition) => ({
+    opacity: 0,
+    y: reducedMotion ? 0 : direction === "down" ? "8%" : "-8%",
+  }),
+  active: { opacity: 1, y: 0 },
+  exit: ({ direction, reducedMotion }: ScreenTransition) => ({
+    opacity: 0,
+    y: reducedMotion ? 0 : direction === "down" ? "-8%" : "8%",
+  }),
+};
+
+function CarouselScreen({
+  screen,
+  transition,
+}: {
+  screen: (typeof SCREENS)[number];
+  transition: ScreenTransition;
+}) {
+  const isPresent = useIsPresent();
+  const { Component } = screen;
+
+  return (
+    <motion.div
+      aria-hidden={!isPresent}
+      className={`absolute inset-0 ${
+        isPresent ? "z-20" : "pointer-events-none z-10"
+      }`}
+      variants={screenVariants}
+      custom={transition}
+      initial="enter"
+      animate="active"
+      exit="exit"
+      transition={
+        transition.reducedMotion
+          ? { duration: 0.12, ease: "linear" }
+          : { duration: 0.38, ease: [0.4, 0, 0.2, 1] }
+      }
+    >
+      <Component active={isPresent} />
+    </motion.div>
+  );
+}
+
 export default function ThemeCarousel() {
   const [activeTheme, setActiveTheme] = useState<string>(THEMES[0].id);
   const [surfaceStyle, setSurfaceStyle] = useState<"cosmos" | "cream">("cosmos");
   const [index, setIndex] = useState(0);
-  const [prev, setPrev] = useState<number | null>(null);
-  const [dir, setDir] = useState<"down" | "up">("down");
+  const [direction, setDirection] = useState<CarouselDirection>("down");
+  const shouldReduceMotion = useReducedMotion();
   const touchX = useRef<number | null>(null);
 
   // Follow the palette currently driving the page-wide choreography.
@@ -39,13 +95,6 @@ export default function ThemeCarousel() {
     return () => window.removeEventListener("accent:active", onActive);
   }, []);
 
-  // Drop the outgoing slide once its exit animation has finished.
-  useEffect(() => {
-    if (prev === null) return;
-    const t = setTimeout(() => setPrev(null), 400);
-    return () => clearTimeout(t);
-  }, [prev, index]);
-
   function pick(id: string, themeIndex: number) {
     setActiveTheme(id);
     window.dispatchEvent(
@@ -57,14 +106,19 @@ export default function ThemeCarousel() {
 
   // Navigate to a screen, slide direction mirrors the app: a later tab slides
   // down (new from the bottom), an earlier one slides up.
-  function goTo(next: number) {
+  function goTo(
+    next: number,
+    nextDirection: CarouselDirection = next > index ? "down" : "up",
+  ) {
     if (next === index) return;
-    setDir(next > index ? "down" : "up");
-    setPrev(index);
+    setDirection(nextDirection);
     setIndex(next);
   }
-  const step = (d: number) =>
-    goTo((index + d + SCREENS.length) % SCREENS.length);
+  const step = (delta: -1 | 1) =>
+    goTo(
+      (index + delta + SCREENS.length) % SCREENS.length,
+      delta > 0 ? "down" : "up",
+    );
 
   function onTouchStart(e: React.TouchEvent) {
     touchX.current = e.touches[0]?.clientX ?? null;
@@ -75,6 +129,12 @@ export default function ThemeCarousel() {
     if (Math.abs(dx) > 40) step(dx < 0 ? 1 : -1);
     touchX.current = null;
   }
+
+  const screen = SCREENS[index];
+  const screenTransition = {
+    direction,
+    reducedMotion: Boolean(shouldReduceMotion),
+  } satisfies ScreenTransition;
 
   return (
     <section id="personalizacion" className="cv-auto relative border-y border-cosmos-fog/60 bg-cosmos-void/40 px-6 py-28 backdrop-blur-[2px] sm:py-36">
@@ -181,31 +241,17 @@ export default function ThemeCarousel() {
               onTouchStart={onTouchStart}
               onTouchEnd={onTouchEnd}
             >
-              {[index, prev].map((si, slot) => {
-                if (si === null) return null;
-                const { id, Component } = SCREENS[si];
-                const isCurrent = slot === 0;
-                const anim = isCurrent
-                  ? prev === null
-                    ? ""
-                    : dir === "down"
-                    ? "screen-enter-down"
-                    : "screen-enter-up"
-                  : dir === "down"
-                  ? "screen-exit-up"
-                  : "screen-exit-down";
-                return (
-                  <div
-                    key={id}
-                    aria-hidden={!isCurrent}
-                    className={`absolute inset-0 ${anim} ${isCurrent ? "z-20" : "z-10"} ${
-                      isCurrent ? "" : "pointer-events-none"
-                    }`}
-                  >
-                    <Component active={isCurrent} />
-                  </div>
-                );
-              })}
+              <AnimatePresence
+                initial={false}
+                mode="sync"
+                custom={screenTransition}
+              >
+                <CarouselScreen
+                  key={screen.id}
+                  screen={screen}
+                  transition={screenTransition}
+                />
+              </AnimatePresence>
 
               {/* NavRail */}
               <NavRail activeIndex={index} />
@@ -240,10 +286,22 @@ export default function ThemeCarousel() {
                   onClick={() => goTo(i)}
                   aria-label={`Ver ${s.label}`}
                   aria-current={i === index}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    i === index ? "w-6 bg-star" : "w-2 bg-white/25 hover:bg-white/50"
-                  }`}
-                />
+                  className="group flex h-4 w-4 items-center justify-center rounded-full"
+                >
+                  {i === index ? (
+                    <motion.span
+                      layoutId="active-carousel-screen"
+                      className="h-2 w-6 shrink-0 rounded-full bg-star"
+                      transition={
+                        shouldReduceMotion
+                          ? { duration: 0 }
+                          : { type: "spring", stiffness: 500, damping: 35 }
+                      }
+                    />
+                  ) : (
+                    <span className="h-2 w-2 shrink-0 rounded-full bg-white/25 transition-colors duration-300 group-hover:bg-white/50" />
+                  )}
+                </button>
               ))}
             </div>
             <span className="font-[family-name:var(--font-pixel)] text-xs tracking-[0.3em] uppercase text-paper-bright/55">
