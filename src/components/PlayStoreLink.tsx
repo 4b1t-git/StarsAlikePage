@@ -13,14 +13,16 @@ export default function PlayStoreLink({
     <a
       href={PLAY_STORE_URL}
       aria-label="Descargar Stars Alike en Google Play"
-      className={`group inline-flex min-h-12 items-center justify-center gap-3 rounded-2xl bg-paper-bright text-cosmos-void shadow-[0_16px_45px_rgba(0,0,0,0.35)] transition duration-300 hover:-translate-y-0.5 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-star ${
-        compact ? "px-4 py-2" : "px-5 py-3"
+      className={`group inline-flex items-center justify-center bg-paper-bright text-cosmos-void shadow-[0_16px_45px_rgba(0,0,0,0.35)] transition duration-300 hover:-translate-y-0.5 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-star ${
+        compact
+          ? "min-h-9 gap-2 rounded-lg px-3 py-1.5"
+          : "min-h-12 gap-3 rounded-2xl px-5 py-3"
       } ${className}`}
     >
       <svg
         aria-hidden="true"
         viewBox="0 0 32 36"
-        className={compact ? "h-6 w-6" : "h-8 w-8"}
+        className={compact ? "h-5 w-5" : "h-8 w-8"}
       >
         <path
           d="M2.4 2.6 18.8 18 2.4 33.4A4 4 0 0 1 1 30.3V5.7a4 4 0 0 1 1.4-3.1Z"
@@ -37,7 +39,7 @@ export default function PlayStoreLink({
             Disponible en
           </span>
         )}
-        <span className={`${compact ? "text-sm" : "mt-1 text-lg"} font-semibold tracking-tight`}>
+        <span className={`${compact ? "text-[13px]" : "mt-1 text-lg"} font-semibold tracking-tight`}>
           Google Play
         </span>
       </span>

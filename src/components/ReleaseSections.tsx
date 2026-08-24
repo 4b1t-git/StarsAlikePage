@@ -6,19 +6,16 @@ const PILLARS = [
     n: "01",
     title: "Escribe sin fricción.",
     body: "Un editor por bloques para texto, listas, formato enriquecido, imágenes y dictado. La herramienta aparece cuando la necesitas y se aparta cuando estás escribiendo.",
-    meta: "EDITOR · BLOQUES · DICTADO",
   },
   {
     n: "02",
     title: "Conecta lo que piensas.",
     body: "Une páginas con wikilinks, descubre backlinks y contempla tus ideas como una constelación que se vuelve más rica con cada nota.",
-    meta: "WIKILINKS · BACKLINKS · GRAFO",
   },
   {
     n: "03",
     title: "Hazlo verdaderamente tuyo.",
     body: "Elige acentos, superficies y detalles que evolucionan contigo. Stars Alike se siente personal porque no obliga a todos a habitar el mismo espacio.",
-    meta: "TEMAS · ACENTOS · HISTORIA",
   },
 ] as const;
 
@@ -65,52 +62,40 @@ const FAQ = [
 
 export function ProductPillars() {
   return (
-    <section id="funciones" className="cv-auto relative px-6 py-28 sm:py-36">
+    <section id="funciones" className="cv-auto relative px-6 py-28 sm:py-40">
       <div className="mx-auto max-w-6xl">
-        <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
-          <div className="lg:col-span-7">
-            <p className="eyebrow">HECHA PARA PENSAR</p>
-            <h2 className="mt-4 max-w-3xl font-[family-name:var(--font-serif)] text-4xl font-light leading-[1.04] text-balance text-paper-bright sm:text-6xl">
-              Más que guardar notas.
-              <br />
-              <span className="editorial-italic text-star">
-                Un lugar al que quieras volver.
-              </span>
-            </h2>
-          </div>
-          <p className="max-w-xl text-base leading-7 text-paper-bright/70 lg:col-span-4 lg:col-start-9">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="eyebrow">SIMPLE POR FUERA · POTENTE POR DENTRO</p>
+          <h2 className="mt-5 font-[family-name:var(--font-serif)] text-4xl font-light leading-[1.04] text-balance text-paper-bright sm:text-6xl">
+            Todo lo necesario.
+            <br />
+            <span className="editorial-italic text-star">
+              Nada que estorbe.
+            </span>
+          </h2>
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-paper-bright/70 sm:text-lg">
             Stars Alike une escritura, conexiones y personalización en una
             experiencia tranquila: suficientemente potente para crecer contigo,
             suficientemente simple para usarla todos los días.
           </p>
         </div>
 
-        <div className="mt-16 grid gap-5 lg:grid-cols-3">
+        <div className="mt-20 grid border-y border-white/10 lg:grid-cols-3 lg:divide-x lg:divide-white/10">
           {PILLARS.map((pillar) => (
             <article
               key={pillar.n}
-              className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.035] p-7 transition duration-500 hover:-translate-y-1 hover:border-star/35 hover:bg-white/[0.055] sm:p-8"
+              className="group relative border-b border-white/10 px-1 py-10 last:border-b-0 lg:border-b-0 lg:px-9 lg:py-14 lg:first:pl-0 lg:last:pr-0"
             >
-              <div
-                aria-hidden="true"
-                className="absolute -right-12 -top-12 h-32 w-32 rounded-full bg-star/10 blur-3xl transition duration-500 group-hover:bg-star/20"
-              />
-              <div className="flex items-center justify-between">
-                <span className="font-[family-name:var(--font-pixel)] text-sm tracking-[0.25em] text-star">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-star/25 bg-star/[0.055] transition duration-300 group-hover:border-star/50 group-hover:bg-star/10">
+                <span className="font-[family-name:var(--font-pixel)] text-xs tracking-[0.16em] text-star">
                   {pillar.n}
                 </span>
-                <span aria-hidden="true" className="text-xl text-star/70">
-                  ✦
-                </span>
               </div>
-              <h3 className="mt-12 font-[family-name:var(--font-serif)] text-3xl font-light leading-tight text-paper-bright">
+              <h3 className="mt-8 font-[family-name:var(--font-serif)] text-3xl font-light leading-tight text-paper-bright">
                 {pillar.title}
               </h3>
               <p className="mt-4 text-[15px] leading-7 text-paper-bright/70">
                 {pillar.body}
-              </p>
-                <p className="mt-8 border-t border-white/10 pt-4 text-xs font-medium tracking-[0.14em] text-paper-bright/60">
-                {pillar.meta}
               </p>
             </article>
           ))}
