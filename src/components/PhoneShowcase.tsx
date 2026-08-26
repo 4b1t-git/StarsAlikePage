@@ -250,7 +250,6 @@ function PhoneDiarios() {
 }
 
 function PhoneConstelacion() {
-  const delay = useSyncedAnimationDelay();
   return (
     <div className="absolute inset-0 font-[family-name:var(--font-sans)] text-mockup-ink">
       {/* Header */}

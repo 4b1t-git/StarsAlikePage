@@ -1,103 +1,111 @@
 import Link from "next/link";
 import StarryBackground from "@/components/StarryBackground";
-import EmailCapture from "@/components/EmailCapture";
-import PhoneMockupGallery from "@/components/PhoneMockupGallery";
 import MarqueeTags from "@/components/MarqueeTags";
 import ThemeCarousel from "@/components/ThemeCarousel";
 import PullQuote from "@/components/PullQuote";
 import EditorMockup from "@/components/EditorMockup";
-import VerticalTicker from "@/components/VerticalTicker";
 import WikilinkExplanation from "@/components/WikilinkExplanation";
-
-const HERO_WORDS = ["Una", "app", "de", "notas"];
-const HERO_WORDS_TWO = ["con", "tu", "personalidad."];
+import PlayStoreLink from "@/components/PlayStoreLink";
+import HeroProductPreview from "@/components/HeroProductPreview";
+import {
+  FaqSection,
+  FinalReleaseCta,
+  ProductPillars,
+  TrustSection,
+} from "@/components/ReleaseSections";
 
 export default function HomePage() {
   return (
     <main className="relative isolate flex-1">
       {/* HERO ───────────────────────────────────── */}
-      <section className="relative min-h-[100svh] overflow-hidden">
-        <div className="absolute inset-0">
+      <section
+        id="inicio"
+        className="relative overflow-hidden border-b border-white/[0.06]"
+      >
+        <div className="absolute inset-0 opacity-40 sm:opacity-50">
           <StarryBackground mode="hero" />
         </div>
 
-        <VerticalTicker />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 75% 52% at 50% 48%, color-mix(in oklab, var(--color-star), transparent 94%) 0%, transparent 72%), linear-gradient(to bottom, rgba(5,5,5,0.18), #050505 94%)",
+          }}
+        />
 
-        <div className="relative z-10 mx-auto grid min-h-[100svh] max-w-6xl grid-cols-12 gap-6 px-6 pt-28 pb-24 sm:pt-32">
-          {/* Top eyebrow */}
-          <div className="col-span-12 flex items-center justify-between">
-            <p className="eyebrow">STARS ALIKE · ALPHA 2026</p>
-            <p className="hidden font-[family-name:var(--font-pixel)] text-xs tracking-[0.3em] uppercase text-paper-bright/60 sm:block">
-              waitlist · android · sin spam
-            </p>
+        <header className="absolute inset-x-0 top-0 z-30 px-5 pt-5 sm:px-7">
+          <div className="mx-auto flex h-10 max-w-7xl items-center justify-between">
+            <a
+              href="#inicio"
+              aria-label="Volver al inicio"
+              className="group flex items-center gap-2.5 text-paper-bright"
+            >
+              <span
+                aria-hidden="true"
+                className="text-lg text-star transition-transform duration-500 group-hover:rotate-45"
+              >
+                ✦
+              </span>
+              <span className="font-[family-name:var(--font-serif)] text-lg italic sm:text-xl">
+                stars alike
+              </span>
+            </a>
+
+            <nav aria-label="Navegación principal" className="flex items-center gap-5">
+              <a
+                className="hidden text-sm font-medium text-paper-bright/60 transition hover:text-paper-bright sm:block"
+                href="#funciones"
+              >
+                Funciones
+              </a>
+              <PlayStoreLink compact />
+            </nav>
           </div>
+        </header>
 
-          {/* Headline — right-aligned to clear the upper-left black hole */}
-          <div className="col-span-12 mt-auto sm:col-span-10 sm:col-start-3 sm:text-right">
-            <p className="font-[family-name:var(--font-pixel)] text-[10px] tracking-[0.4em] uppercase text-star/80">
-              LÍNEA 01 — 02
+        <div className="relative z-10 mx-auto max-w-6xl px-5 pb-10 pt-32 sm:px-6 sm:pb-16 sm:pt-40">
+          <div className="mx-auto max-w-5xl text-center">
+            <p className="animate-fade-up inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-star/80 sm:text-xs">
+              <span aria-hidden="true">✦</span>
+              Notas que conectan contigo
             </p>
-            <h1 className="word-reveal mt-3 overflow-hidden font-[family-name:var(--font-serif)] font-light leading-[0.94] tracking-tight text-paper-bright text-[clamp(3rem,9vw,8.5rem)]">
-              {HERO_WORDS.map((w, i) => (
-                <span
-                  key={i}
-                  style={{ ["--i" as string]: i }}
-                  className="mr-[0.25em]"
-                >
-                  {w}
-                </span>
-              ))}
-              <br />
-              {HERO_WORDS_TWO.map((w, i) => (
-                <span
-                  key={i}
-                  style={{ ["--i" as string]: i, animationDelay: `${1500 + i * 90}ms` }}
-                  className="editorial-italic mr-[0.18em] text-star"
-                >
-                  {w}
-                </span>
-              ))}
+
+            <h1 className="mt-6 text-balance text-[clamp(3.15rem,6.6vw,6.4rem)] font-medium leading-[0.94] tracking-[-0.05em] text-paper-bright">
+              <span className="animate-fade-up block">
+                Tus ideas tienen una forma.
+              </span>
+              <span
+                className="cozy-hero-wipe editorial-italic animate-fade-up mt-2 block tracking-[-0.035em]"
+                style={{ animationDelay: "180ms" }}
+              >
+                Hazla visible.
+              </span>
             </h1>
 
             <p
-              className="word-reveal mt-8 ml-auto max-w-2xl text-lg sm:text-xl text-paper-bright/75 leading-relaxed"
+              className="animate-fade-up mx-auto mt-6 max-w-xl text-base leading-7 text-paper-bright/65 sm:text-lg sm:leading-8"
+              style={{ animationDelay: "300ms" }}
             >
-              <span style={{ animationDelay: "1500ms" }}>
-                Una app de notas personales con un sutil toque social.
-                Ni fea ni complicada; diseñada para ser tu compañera,
-                crecer contigo y desbloquear capas de personalización
-                mientras construyes algo duradero.
-              </span>
+              Escribe sin distracciones, conecta tus pensamientos y mira cómo
+              tu constelación crece contigo.
             </p>
 
-            <div className="word-reveal mt-10 ml-auto max-w-xl">
-              <span className="block" style={{ animationDelay: "1500ms" }}>
-                <EmailCapture />
-              </span>
+            <div
+              className="animate-fade-up mt-8 flex items-center justify-center"
+              style={{ animationDelay: "420ms" }}
+            >
+              <PlayStoreLink />
             </div>
           </div>
 
-          {/* Bottom meta */}
-          <div className="col-span-12 mt-16 grid grid-cols-2 gap-6 sm:grid-cols-4">
-            {[
-              { k: "v 0.1", v: "construyendo despacio" },
-              { k: "✦", v: "sin algoritmo, sin feed" },
-              { k: "wikilinks", v: <WikilinkExplanation>[[así, entre páginas]]</WikilinkExplanation> },
-              { k: "android", v: "ios pronto" },
-            ].map((it, idx) => (
-              <div key={idx} className="border-t border-cosmos-fog pt-3">
-                <p className="font-[family-name:var(--font-pixel)] text-xs tracking-[0.3em] uppercase text-star/80">
-                  {it.k}
-                </p>
-                <p className="mt-1 text-sm text-paper-bright/70">{it.v}</p>
-              </div>
-            ))}
-          </div>
+          <HeroProductPreview />
         </div>
       </section>
 
-      {/* MARQUEE ─────────────────────────────────── */}
-      <MarqueeTags />
+      {/* PRODUCT VALUE ────────────────────────────── */}
+      <ProductPillars />
 
       {/* THEME CAROUSEL ──────────────────────────── */}
       <ThemeCarousel />
@@ -114,67 +122,32 @@ export default function HomePage() {
                 <span className="editorial-italic text-star">a tu medida.</span>
               </h2>
             </div>
-            <p className="max-w-sm text-paper-bright/65 leading-relaxed">
-              Un potente editor fluido e intuitivo basado en bloques, pensado para que tus ideas tomen forma sin distracciones. Añade textos, listas y aplica formatos ricos a tu ritmo. Conecta tus pensamientos fácilmente usando <WikilinkExplanation>wikilinks</WikilinkExplanation> entre páginas, y observa cómo tus etiquetas cobran vida y enriquecen tu constelación mientras escribes.
+            <p className="max-w-sm leading-relaxed text-paper-bright/70">
+              Un potente editor fluido e intuitivo basado en bloques, pensado
+              para que tus ideas tomen forma sin distracciones. Añade textos,
+              listas y aplica formatos ricos a tu ritmo. Conecta tus
+              pensamientos fácilmente usando{" "}
+              <WikilinkExplanation>wikilinks</WikilinkExplanation> entre
+              páginas, y observa cómo tus etiquetas cobran vida y enriquecen
+              tu constelación mientras escribes.
             </p>
           </div>
         </div>
         <EditorMockup />
       </section>
 
+      {/* MARQUEE ─────────────────────────────────── */}
+      <MarqueeTags />
+
+      {/* TRUST ───────────────────────────────────── */}
+      <TrustSection />
+
       {/* PULL QUOTE ──────────────────────────────── */}
       <PullQuote />
 
-      {/* CTA ─────────────────────────────────────── */}
-      <section className="cv-auto relative px-6 py-32 sm:py-40">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="eyebrow">CUANDO SALGA</p>
-          <h2 className="mt-4 font-[family-name:var(--font-serif)] font-light text-4xl sm:text-6xl text-paper-bright leading-[1.05] text-balance">
-            Cuando salga,
-            <br />
-            <span className="editorial-italic text-star">te llega una estrella.</span>
-          </h2>
-          <p className="mt-6 text-paper-bright/65">
-            Un solo correo, el día del lanzamiento. Nada más.
-          </p>
-
-          <div className="relative mt-12">
-            {/* Orbit ring */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-x-0 -top-10 mx-auto h-[420px] max-w-[420px]"
-            >
-              <svg viewBox="0 0 420 420" className="h-full w-full animate-orbit">
-                <circle
-                  cx="210"
-                  cy="210"
-                  r="190"
-                  fill="none"
-                  stroke="var(--color-star-soft)"
-                  strokeDasharray="2 8"
-                />
-                {Array.from({ length: 6 }).map((_, i) => {
-                  const angle = (i / 6) * Math.PI * 2;
-                  const x = 210 + Math.cos(angle) * 190;
-                  const y = 210 + Math.sin(angle) * 190;
-                  return (
-                    <circle
-                      key={i}
-                      cx={x}
-                      cy={y}
-                      r="4"
-                      fill="var(--color-star)"
-                    />
-                  );
-                })}
-              </svg>
-            </div>
-            <div className="relative">
-              <EmailCapture />
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* FAQ + RELEASE CTA ───────────────────────── */}
+      <FaqSection />
+      <FinalReleaseCta />
 
       {/* FOOTER ──────────────────────────────────── */}
       <footer className="relative border-t border-cosmos-fog/60 px-6 py-12">
@@ -188,18 +161,28 @@ export default function HomePage() {
             </p>
             <Link
               href="/privacidad"
-              className="mt-3 inline-block font-[family-name:var(--font-pixel)] text-xs tracking-[0.3em] uppercase text-paper-bright/55 underline-offset-4 hover:text-star hover:underline"
+              className="mt-4 inline-flex items-center gap-2 rounded-full border border-star/35 bg-star/[0.06] px-4 py-2 font-[family-name:var(--font-pixel)] text-xs uppercase tracking-[0.2em] text-star transition hover:border-star/70 hover:bg-star/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-star focus-visible:ring-offset-2 focus-visible:ring-offset-cosmos-void"
             >
-              privacidad
+              Política de privacidad
+              <span aria-hidden="true">→</span>
             </Link>
           </div>
-          <div className="grid grid-cols-2 gap-x-10 gap-y-2 text-xs font-[family-name:var(--font-pixel)] tracking-[0.25em] uppercase text-paper-bright/55 sm:grid-cols-3">
-            <span>android · alpha</span>
+          <div className="grid grid-cols-2 gap-x-10 gap-y-2 text-xs font-medium tracking-[0.12em] uppercase text-paper-bright/60 sm:grid-cols-3">
+            <a className="transition hover:text-star" href="#inicio">
+              inicio
+            </a>
+            <a className="transition hover:text-star" href="#funciones">
+              funciones
+            </a>
+            <a
+              className="transition hover:text-star"
+              href="#personalizacion"
+            >
+              temas
+            </a>
             <span>sin algoritmo</span>
             <span>sin feed</span>
             <span>vault + app lock</span>
-            <span>capas que crecen</span>
-            <span>· ✦ ·</span>
           </div>
         </div>
       </footer>

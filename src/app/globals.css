@@ -2,8 +2,8 @@
 
 /* Accent ("star") colors are kept NON-inline so the generated utilities
    (text-star, bg-star, from-star, border-star, fill-star…) resolve
-   var(--color-star) instead of an inlined literal. The theme switcher
-   overrides these four variables at runtime to retheme the whole page. */
+   var(--color-star) instead of an inlined literal. AccentChoreography updates
+   the main value continuously; the translucent variants derive from it. */
 @theme {
   --color-star: #40E0D0;
   --color-star-dim: #40E0D0cc;
@@ -44,6 +44,12 @@
 }
 
 :root {
+  --color-star-dim: color-mix(in srgb, var(--color-star) 80%, transparent);
+  --color-star-soft: color-mix(in srgb, var(--color-star) 33%, transparent);
+  --color-star-ghost: color-mix(in srgb, var(--color-star) 8%, transparent);
+  --color-star-from: #40E0D0;
+  --color-star-to: #E38AA8;
+  --cozy-shimmer-progress: 0%;
   --surface-void: #050505;
   --surface-deep: #0A0A0A;
   --surface-dust: #141414;
@@ -100,9 +106,23 @@ html, body {
   background: var(--color-cosmos-void);
   color: #EDEDED;
   font-family: var(--font-sans);
-  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M12 0 C12 10 14 12 24 12 C14 12 12 14 12 24 C12 14 10 12 0 12 C10 12 12 10 12 0 Z' fill='%2340E0D0'/></svg>") 12 12, auto;
+  font-feature-settings: "liga" 1, "calt" 1;
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M12 0 C12 10 14 12 24 12 C14 12 12 14 12 24 C12 14 10 12 0 12 C10 12 12 10 12 0 Z' fill='%23F1ECD9'/></svg>") 12 12, auto;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+section[id] {
+  scroll-margin-top: 6rem;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-star);
+  outline-offset: 4px;
 }
 
 ::selection {
@@ -127,47 +147,53 @@ html, body {
   );
 }
 
-/* Smooth accent recolor when the theme switcher changes --color-star.
-   Gated behind .theme-anim (added on mount) so there is no transition on
-   first paint, and only accent-related properties animate. */
-html.theme-anim * {
-  transition:
-    color 0.45s ease,
-    background-color 0.45s ease,
-    border-color 0.45s ease,
-    fill 0.45s ease,
-    stroke 0.45s ease,
-    box-shadow 0.45s ease;
-}
-
 /* ── App-mockup fidelity helpers (ported from the app) ─────────────── */
 
-/* Cozy-line shimmer — accent base with a travelling highlight (ShimmerText.kt).
-   11s cycle, ~75% sweep then a calm rest at uniform base colour. The gradient
-   keeps the text FULLY covered at every keyframe (background-position stays in
-   0–100%), so no part of the text ever drops to transparent — that transparent
-   gap was what made it look like it "stuck". */
-@keyframes cozyShimmer {
-  0%   { background-position: 100% 0; }  /* highlight off the left */
-  75%  { background-position: 0% 0; }    /* highlight off the right */
-  100% { background-position: 0% 0; }    /* rest — uniform base */
-}
+/* Cozy-line shimmer — a bright band visibly wipes the previous accent into the
+   next one. The shared JS frame clock keeps that wipe phase-locked with the
+   page-wide color transition. */
 .shimmer-accent {
   color: transparent;
   -webkit-background-clip: text;
   background-clip: text;
   background-image: linear-gradient(
     100deg,
-    color-mix(in oklab, var(--color-star), transparent 50%) 0%,
-    color-mix(in oklab, var(--color-star), transparent 50%) 40%,
-    var(--color-star) 50%,
-    color-mix(in oklab, var(--color-star), transparent 50%) 60%,
-    color-mix(in oklab, var(--color-star), transparent 50%) 100%
+    color-mix(in oklab, var(--color-star-to), transparent 50%) 0%,
+    color-mix(in oklab, var(--color-star-to), transparent 50%) 46%,
+    color-mix(in oklab, var(--color-star-to), white 58%) 49.25%,
+    color-mix(in oklab, var(--color-star-from), white 58%) 50.75%,
+    color-mix(in oklab, var(--color-star-from), transparent 50%) 54%,
+    color-mix(in oklab, var(--color-star-from), transparent 50%) 100%
   );
   background-size: 250% 100%;
+  background-position: calc(100% - var(--cozy-shimmer-progress)) 0;
   background-repeat: no-repeat;
   will-change: background-position;
-  animation: cozyShimmer 11s ease-in-out infinite;
+}
+
+/* Hero treatment: the luminous edge leaves the next palette color behind it,
+   making the shimmer itself read as the transition instead of a separate FX. */
+.cozy-hero-wipe {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-image: linear-gradient(
+    100deg,
+    var(--color-star-to) 0%,
+    var(--color-star-to) 46%,
+    color-mix(in oklab, var(--color-star-to), white 68%) 49.25%,
+    color-mix(in oklab, var(--color-star-from), white 68%) 50.75%,
+    var(--color-star-from) 54%,
+    var(--color-star-from) 100%
+  );
+  background-size: 280% 100%;
+  background-position: calc(100% - var(--cozy-shimmer-progress)) 0;
+  background-repeat: no-repeat;
+  filter: drop-shadow(
+    0 0 18px color-mix(in oklab, var(--color-star), transparent 86%)
+  );
+  will-change: background-position, filter;
 }
 
 /* Breathing accent border — a comet that travels once around the rounded
@@ -249,7 +275,7 @@ html.theme-anim * {
   font-style: italic;
   font-weight: 300;
   font-optical-sizing: auto;
-  font-variation-settings: "opsz" 144, "SOFT" 50;
+  font-variation-settings: "opsz" 144;
 }
 
 .gradient-text {
@@ -389,22 +415,8 @@ html.theme-anim * {
   animation-delay: calc(var(--i, 0) * 90ms + 120ms);
 }
 
-.scroll-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 2px;
-  width: 100%;
-  transform-origin: 0 50%;
-  background: linear-gradient(90deg, var(--color-star), var(--color-paper-bright));
-  z-index: 60;
-  animation: scrollGrow linear both;
-  animation-timeline: scroll(root);
-}
-
-@keyframes scrollGrow {
-  from { transform: scaleX(0); }
-  to   { transform: scaleX(1); }
+.word-reveal > span.cozy-phrase-reveal {
+  display: block;
 }
 
 .phone-glow {

@@ -9,7 +9,6 @@ const TAGS = [
 ];
 
 export default function MarqueeTags() {
-  const items = [...TAGS, ...TAGS];
   return (
     <section
       aria-label="Etiquetas de Stars Alike"

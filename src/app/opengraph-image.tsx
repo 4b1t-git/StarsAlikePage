@@ -42,7 +42,7 @@ export default function Image() {
               fill={STAR}
             />
           </svg>
-          <span>Stars Alike · Alpha 2026</span>
+          <span>Stars Alike · Android</span>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -90,7 +90,7 @@ export default function Image() {
               color: "rgba(241,236,217,0.5)",
             }}
           >
-            android
+            Google Play
           </span>
         </div>
       </div>

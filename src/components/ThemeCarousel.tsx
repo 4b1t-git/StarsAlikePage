@@ -1,6 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import {
+  AnimatePresence,
+  motion,
+  useIsPresent,
+  useReducedMotion,
+} from "motion/react";
 import { HomeMockup } from "./HomeMockup";
 import { AppMockup } from "./AppMockup";
 import TabletFrame from "./TabletFrame";
@@ -8,14 +14,9 @@ import PhoneShowcase from "./PhoneShowcase";
 import NavRail from "./NavRail";
 import ConstellationMockup from "./ConstellationMockup";
 import HistoryMockup from "./HistoryMockup";
+import { ACCENT_PALETTES } from "@/lib/accentPalettes";
 
-const THEMES = [
-  { id: "cyan", name: "Estelar", color: "#40E0D0" }, // default / brand
-  { id: "ice", name: "Ice", color: "#6FA8FF" },
-  { id: "coral", name: "Coral", color: "#FF9E6B" },
-  { id: "lavender", name: "Lavender", color: "#B392E6" },
-  { id: "aurora", name: "Aurora", color: "#4FD89B" },
-] as const;
+const THEMES = ACCENT_PALETTES;
 
 // App screens shown in the carousel. Add more here as they're built.
 const SCREENS = [
@@ -25,53 +26,99 @@ const SCREENS = [
   { id: "historia", label: "Historia", Component: HistoryMockup },
 ] as const;
 
-/** Push an accent color into the global CSS variables that every `*-star`
- * utility and the custom CSS resolve, retheming the whole page at once. */
-function applyAccent(hex: string) {
-  const root = document.documentElement;
-  root.style.setProperty("--color-star", hex);
-  root.style.setProperty("--color-star-dim", `${hex}cc`);
-  root.style.setProperty("--color-star-soft", `${hex}55`);
-  root.style.setProperty("--color-star-ghost", `${hex}15`);
+type CarouselDirection = "down" | "up";
+type ScreenTransition = {
+  direction: CarouselDirection;
+  reducedMotion: boolean;
+};
+
+const screenVariants = {
+  enter: ({ direction, reducedMotion }: ScreenTransition) => ({
+    opacity: 0,
+    y: reducedMotion ? 0 : direction === "down" ? "8%" : "-8%",
+  }),
+  active: { opacity: 1, y: 0 },
+  exit: ({ direction, reducedMotion }: ScreenTransition) => ({
+    opacity: 0,
+    y: reducedMotion ? 0 : direction === "down" ? "-8%" : "8%",
+  }),
+};
+
+function CarouselScreen({
+  screen,
+  transition,
+}: {
+  screen: (typeof SCREENS)[number];
+  transition: ScreenTransition;
+}) {
+  const isPresent = useIsPresent();
+  const { Component } = screen;
+
+  return (
+    <motion.div
+      aria-hidden={!isPresent}
+      className={`absolute inset-0 ${
+        isPresent ? "z-20" : "pointer-events-none z-10"
+      }`}
+      variants={screenVariants}
+      custom={transition}
+      initial="enter"
+      animate="active"
+      exit="exit"
+      transition={
+        transition.reducedMotion
+          ? { duration: 0.12, ease: "linear" }
+          : { duration: 0.38, ease: [0.4, 0, 0.2, 1] }
+      }
+    >
+      <Component active={isPresent} />
+    </motion.div>
+  );
 }
 
 export default function ThemeCarousel() {
   const [activeTheme, setActiveTheme] = useState<string>(THEMES[0].id);
   const [surfaceStyle, setSurfaceStyle] = useState<"cosmos" | "cream">("cosmos");
   const [index, setIndex] = useState(0);
-  const [prev, setPrev] = useState<number | null>(null);
-  const [dir, setDir] = useState<"down" | "up">("down");
+  const [direction, setDirection] = useState<CarouselDirection>("down");
+  const shouldReduceMotion = useReducedMotion();
   const touchX = useRef<number | null>(null);
 
-  // Enable smooth accent transitions only after mount (avoids a first-paint
-  // color animation). The default theme matches the SSR colors, so no flash.
+  // Follow the palette currently driving the page-wide choreography.
   useEffect(() => {
-    document.documentElement.classList.add("theme-anim");
-    return () => document.documentElement.classList.remove("theme-anim");
+    const onActive = (event: Event) => {
+      const detail = (event as CustomEvent<{ id?: string }>).detail;
+      if (detail?.id) setActiveTheme(detail.id);
+    };
+
+    window.addEventListener("accent:active", onActive);
+    return () => window.removeEventListener("accent:active", onActive);
   }, []);
 
-  // Drop the outgoing slide once its exit animation has finished.
-  useEffect(() => {
-    if (prev === null) return;
-    const t = setTimeout(() => setPrev(null), 400);
-    return () => clearTimeout(t);
-  }, [prev, index]);
-
-  function pick(id: string, color: string) {
+  function pick(id: string, themeIndex: number) {
     setActiveTheme(id);
-    applyAccent(color);
+    window.dispatchEvent(
+      new CustomEvent("accent:select", {
+        detail: { id, index: themeIndex },
+      }),
+    );
   }
 
   // Navigate to a screen, slide direction mirrors the app: a later tab slides
   // down (new from the bottom), an earlier one slides up.
-  function goTo(next: number) {
+  function goTo(
+    next: number,
+    nextDirection: CarouselDirection = next > index ? "down" : "up",
+  ) {
     if (next === index) return;
-    setDir(next > index ? "down" : "up");
-    setPrev(index);
+    setDirection(nextDirection);
     setIndex(next);
   }
-  const step = (d: number) =>
-    goTo((index + d + SCREENS.length) % SCREENS.length);
+  const step = (delta: -1 | 1) =>
+    goTo(
+      (index + delta + SCREENS.length) % SCREENS.length,
+      delta > 0 ? "down" : "up",
+    );
 
   function onTouchStart(e: React.TouchEvent) {
     touchX.current = e.touches[0]?.clientX ?? null;
@@ -83,20 +130,26 @@ export default function ThemeCarousel() {
     touchX.current = null;
   }
 
+  const screen = SCREENS[index];
+  const screenTransition = {
+    direction,
+    reducedMotion: Boolean(shouldReduceMotion),
+  } satisfies ScreenTransition;
+
   return (
-    <section className="cv-auto relative border-y border-cosmos-fog/60 bg-cosmos-void/40 px-6 py-28 backdrop-blur-[2px] sm:py-36">
+    <section id="personalizacion" className="cv-auto relative border-y border-cosmos-fog/60 bg-cosmos-void/40 px-6 py-28 backdrop-blur-[2px] sm:py-36">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
-            <p className="eyebrow">VERSATILIDAD</p>
+            <p className="eyebrow">EN CUALQUIER PANTALLA</p>
             <h2 className="mt-3 font-[family-name:var(--font-serif)] font-light text-4xl sm:text-6xl text-paper-bright leading-[1.05] text-balance">
-              Hecho especialmente para
+              Tu espacio, en
               <br />
-              <span className="editorial-italic text-star">TABLET Y TELÉFONO MÓVIL.</span>
+              <span className="editorial-italic text-star">tablet y teléfono.</span>
             </h2>
             <p className="mt-4 max-w-md text-paper-bright/65 leading-relaxed">
-              Recorre la app y elige un color: el acento cambia en toda la
-              página, no solo en la pantalla. Tu rincón, a tu manera.
+              Recorre sus espacios y elige un color. La interfaz se adapta a
+              ti sin esconder la potencia que hay debajo.
             </p>
           </div>
 
@@ -106,11 +159,11 @@ export default function ThemeCarousel() {
               <span className="font-[family-name:var(--font-pixel)] text-xs tracking-[0.2em] text-paper-bright/60 uppercase w-16">
                 ACENTO:
               </span>
-              <div className="flex gap-3">
-                {THEMES.map((theme) => (
+              <div className="flex max-w-[19rem] flex-wrap gap-3">
+                {THEMES.map((theme, themeIndex) => (
                   <button
                     key={theme.id}
-                    onClick={() => pick(theme.id, theme.color)}
+                    onClick={() => pick(theme.id, themeIndex)}
                     aria-label={`Aplicar tema ${theme.name}`}
                     aria-pressed={activeTheme === theme.id}
                     className={`h-8 w-8 rounded-full transition-transform duration-300 hover:scale-110 active:scale-95 ${
@@ -188,31 +241,17 @@ export default function ThemeCarousel() {
               onTouchStart={onTouchStart}
               onTouchEnd={onTouchEnd}
             >
-              {[index, prev].map((si, slot) => {
-                if (si === null) return null;
-                const { id, Component } = SCREENS[si];
-                const isCurrent = slot === 0;
-                const anim = isCurrent
-                  ? prev === null
-                    ? ""
-                    : dir === "down"
-                    ? "screen-enter-down"
-                    : "screen-enter-up"
-                  : dir === "down"
-                  ? "screen-exit-up"
-                  : "screen-exit-down";
-                return (
-                  <div
-                    key={id}
-                    aria-hidden={!isCurrent}
-                    className={`absolute inset-0 ${anim} ${isCurrent ? "z-20" : "z-10"} ${
-                      isCurrent ? "" : "pointer-events-none"
-                    }`}
-                  >
-                    <Component active={isCurrent} />
-                  </div>
-                );
-              })}
+              <AnimatePresence
+                initial={false}
+                mode="sync"
+                custom={screenTransition}
+              >
+                <CarouselScreen
+                  key={screen.id}
+                  screen={screen}
+                  transition={screenTransition}
+                />
+              </AnimatePresence>
 
               {/* NavRail */}
               <NavRail activeIndex={index} />
@@ -247,10 +286,22 @@ export default function ThemeCarousel() {
                   onClick={() => goTo(i)}
                   aria-label={`Ver ${s.label}`}
                   aria-current={i === index}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    i === index ? "w-6 bg-star" : "w-2 bg-white/25 hover:bg-white/50"
-                  }`}
-                />
+                  className="group flex h-4 w-4 items-center justify-center rounded-full"
+                >
+                  {i === index ? (
+                    <motion.span
+                      layoutId="active-carousel-screen"
+                      className="h-2 w-6 shrink-0 rounded-full bg-star"
+                      transition={
+                        shouldReduceMotion
+                          ? { duration: 0 }
+                          : { type: "spring", stiffness: 500, damping: 35 }
+                      }
+                    />
+                  ) : (
+                    <span className="h-2 w-2 shrink-0 rounded-full bg-white/25 transition-colors duration-300 group-hover:bg-white/50" />
+                  )}
+                </button>
               ))}
             </div>
             <span className="font-[family-name:var(--font-pixel)] text-xs tracking-[0.3em] uppercase text-paper-bright/55">
@@ -258,10 +309,10 @@ export default function ThemeCarousel() {
             </span>
           </div>
           
-          <p className="max-w-2xl text-center font-[family-name:var(--font-pixel)] text-[11px] tracking-[0.15em] uppercase leading-relaxed text-paper-bright/35">
-            Los mockups mostrados son representaciones interactivas para previsualizar el concepto de la app y no reflejan fielmente la estética final de la aplicación. Si te interesa la idea, visita{" "}
-            <a href="#hero" className="text-star/60 underline underline-offset-2 hover:text-star transition-colors">Play Store</a>{" "}
-            en el inicio de la página y regístrate para ser de los primeros en probarla.
+          <p className="max-w-2xl text-center text-sm leading-6 text-paper-bright/60">
+            Explora Inicio, Diarios, Constelación e Historia. Cada pantalla
+            comparte el mismo acento y conserva su propia forma de ayudarte a
+            escribir, conectar y recordar.
           </p>
         </div>
       </div>

@@ -166,7 +166,7 @@ function Inicio() {
       <defs>
         <radialGradient id="bhGrad">
           <stop offset="0" stopColor="#000" />
-          <stop offset="0.45" stopColor="rgba(64,224,208,0.22)" />
+          <stop offset="0.45" stopColor="var(--color-star)" stopOpacity="0.22" />
           <stop offset="1" stopColor="rgba(0,0,0,0)" />
         </radialGradient>
       </defs>
@@ -202,7 +202,8 @@ function Inicio() {
           width={SCREEN_W - 48}
           height="38"
           rx="10"
-          fill="rgba(64,224,208,0.08)"
+          fill="var(--color-star)"
+          fillOpacity="0.08"
           stroke="var(--color-star)"
           strokeOpacity="0.4"
         />
@@ -612,7 +613,7 @@ function Vault() {
       {/* aurora wash */}
       <defs>
         <linearGradient id="vaultWash" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="rgba(64,224,208,0.18)" />
+          <stop offset="0%" stopColor="var(--color-star)" stopOpacity="0.18" />
           <stop offset="60%" stopColor="rgba(108,122,166,0.05)" />
           <stop offset="100%" stopColor="rgba(0,0,0,0)" />
         </linearGradient>
@@ -819,7 +820,7 @@ const VARIANTS: Record<PhoneVariant, () => ReactNode> = {
   editor: Editor,
 };
 
-function PhoneMockupImpl({ variant, label, caption, index }: Props) {
+function PhoneMockupImpl({ variant, index }: Props) {
   const render = VARIANTS[variant];
   return (
     <figure
@@ -830,7 +831,13 @@ function PhoneMockupImpl({ variant, label, caption, index }: Props) {
       }}
     >
       <div className="relative">
-        <div className="absolute -inset-6 -z-10 rounded-[48px] bg-[radial-gradient(ellipse_at_center,_rgba(64,224,208,0.18)_0%,_transparent_60%)]" />
+        <div
+          className="absolute -inset-6 -z-10 rounded-[48px]"
+          style={{
+            backgroundImage:
+              "radial-gradient(ellipse at center, color-mix(in srgb, var(--color-star) 18%, transparent) 0%, transparent 60%)",
+          }}
+        />
         <Frame>{render()}</Frame>
       </div>
     </figure>
