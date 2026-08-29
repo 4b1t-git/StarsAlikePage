@@ -1,5 +1,8 @@
 import { ImageResponse } from "next/og";
 
+// Generated once at build time; required by `output: "export"`.
+export const dynamic = "force-static";
+
 export const alt = "Stars Alike — Una app de notas con personalidad";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";

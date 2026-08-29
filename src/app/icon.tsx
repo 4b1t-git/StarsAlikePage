@@ -1,5 +1,8 @@
 import { ImageResponse } from "next/og";
 
+// Generated once at build time; required by `output: "export"`.
+export const dynamic = "force-static";
+
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
 
