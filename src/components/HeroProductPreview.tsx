@@ -1,4 +1,5 @@
 import { HomeMockup } from "@/components/HomeMockup";
+import NavRail from "@/components/NavRail";
 
 export default function HeroProductPreview() {
   return (
@@ -12,6 +13,7 @@ export default function HeroProductPreview() {
           >
             <div className="absolute left-1/2 top-0 aspect-[16/10] w-[170%] -translate-x-1/2 sm:inset-0 sm:w-full sm:translate-x-0">
               <HomeMockup active />
+              <NavRail activeIndex={0} />
             </div>
           </div>
         </div>

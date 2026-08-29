@@ -1,257 +1,172 @@
-import React, { useEffect, useRef, useState } from "react";
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import MockupStarfield from "./MockupStarfield";
-import { useSyncedAnimationDelay } from "./HomeMockup";
 
 const DESIGN_W = 1280;
 const DESIGN_H = 800;
 
-function ConstellationGraph() {
-  const delay = useSyncedAnimationDelay();
+type GraphNode = {
+  id: string;
+  label: string;
+  x: number;
+  y: number;
+  radius: number;
+  color: string;
+};
 
-  // Energy pulse animation definition for the lines
+const NODES: GraphNode[] = [
+  { id: "tech", label: "Tecnología", x: 724, y: 184, radius: 11, color: "#7553df" },
+  { id: "history", label: "Historias", x: 616, y: 284, radius: 10, color: "#c9d94d" },
+  { id: "city", label: "Viaje a la Ciudad", x: 570, y: 356, radius: 8, color: "#7999ec" },
+  { id: "forgotten", label: "Inolvidable", x: 913, y: 309, radius: 10, color: "#70bce9" },
+  { id: "mods", label: "mods mine", x: 458, y: 500, radius: 10, color: "#7ed6ce" },
+  { id: "app", label: "Aplicación", x: 604, y: 498, radius: 11, color: "#7541d1" },
+  { id: "fix", label: "Arreglar app", x: 747, y: 520, radius: 11, color: "#70d2cb" },
+  { id: "math", label: "Matemáticas", x: 837, y: 430, radius: 9, color: "#c46b83" },
+  { id: "photo", label: "Proyectos de Fotografía", x: 920, y: 500, radius: 8, color: "#df9457" },
+  { id: "shop", label: "Compras", x: 618, y: 636, radius: 10, color: "#d796d4" },
+];
+
+const LEAVES = [
+  [724, 115], [684, 133], [766, 133], [660, 170], [788, 171], [657, 214], [792, 216], [697, 244], [756, 244],
+  [585, 310], [650, 314], [665, 265], [665, 359], [554, 394],
+  [930, 239], [973, 273], [978, 344], [921, 381], [864, 283],
+  [394, 442], [420, 470], [424, 536], [459, 573], [493, 522], [484, 446],
+  [565, 455], [575, 541], [642, 550], [665, 479], [668, 425],
+  [715, 456], [704, 548], [754, 590], [792, 557], [816, 491],
+  [798, 382], [875, 397], [886, 455], [794, 468],
+];
+
+const LINKS: Array<[string, string]> = [
+  ["history", "city"], ["history", "app"], ["city", "app"], ["app", "fix"],
+  ["app", "math"], ["fix", "math"], ["fix", "photo"], ["forgotten", "math"],
+  ["history", "math"], ["app", "shop"],
+];
+
+function Graph() {
+  const nodeById = Object.fromEntries(NODES.map((node) => [node.id, node]));
+
   return (
-    <div className="absolute inset-0 flex items-center justify-center">
-      <svg
-        width="100%"
-        height="100%"
-        viewBox="0 0 1000 600"
-        className="overflow-visible"
-        style={{ filter: "drop-shadow(0 0 10px rgba(120, 100, 200, 0.2))" }}
-      >
-        <defs>
-          {/* Subtle glow for the nodes */}
-          <radialGradient id="nodeGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="var(--color-star)" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="var(--color-star)" stopOpacity="0" />
-          </radialGradient>
-        </defs>
+    <svg className="absolute inset-0 h-full w-full" viewBox={`0 0 ${DESIGN_W} ${DESIGN_H}`} aria-hidden>
+      <defs>
+        <filter id="constellation-glow" x="-100%" y="-100%" width="300%" height="300%">
+          <feGaussianBlur stdDeviation="5" result="blur" />
+          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+      </defs>
 
-        {/* --- Links (Edges) --- */}
-        <g stroke="rgba(255,255,255,0.15)" strokeWidth="1" fill="none">
-          {/* A central hub to a sub-hub */}
-          <line x1="500" y1="300" x2="350" y2="400" />
-          <line x1="500" y1="300" x2="650" y2="250" />
-          <line x1="500" y1="300" x2="400" y2="180" />
-          <line x1="500" y1="300" x2="480" y2="450" />
-          <line x1="500" y1="300" x2="750" y2="400" />
-
-          {/* Dotted lines for "Enlaces en común" */}
-          <line x1="400" y1="180" x2="350" y2="400" strokeDasharray="3 3" />
-          <line x1="650" y1="250" x2="750" y2="400" strokeDasharray="3 3" />
-        </g>
-
-        {/* --- Animated Pulses along the links --- */}
-        <g stroke="var(--color-star)" strokeWidth="1.5" fill="none" className="opacity-70">
-          <style>{`
-            @keyframes graphPulse {
-              0% { stroke-dashoffset: 100; opacity: 1; }
-              100% { stroke-dashoffset: -100; opacity: 0; }
-            }
-            .pulse-line {
-              stroke-dasharray: 20 200;
-              animation: graphPulse 4s linear infinite;
-            }
-          `}</style>
-          {/* We reuse the same lines but with the pulse class */}
-          <line x1="500" y1="300" x2="350" y2="400" className="pulse-line" style={{ animationDelay: delay }} />
-          <line x1="500" y1="300" x2="650" y2="250" className="pulse-line" style={{ animationDelay: `calc(${delay} + 1s)` }} />
-          <line x1="500" y1="300" x2="400" y2="180" className="pulse-line" style={{ animationDelay: `calc(${delay} + 2s)` }} />
-          <line x1="500" y1="300" x2="480" y2="450" className="pulse-line" style={{ animationDelay: `calc(${delay} + 0.5s)` }} />
-          <line x1="500" y1="300" x2="750" y2="400" className="pulse-line" style={{ animationDelay: `calc(${delay} + 1.5s)` }} />
-        </g>
-
-        {/* --- Nodes --- */}
-        {/* Hub: Historias (Center) */}
-        <circle cx="500" cy="300" r="10" fill="#4ade80" />
-        <text x="500" y="325" fill="var(--surface-ink)" fontSize="11" textAnchor="middle" className="font-serif opacity-90">Historias</text>
-
-        {/* Animales vistos en el bosque */}
-        <circle cx="350" cy="400" r="8" fill="#facc15" />
-        <text x="350" y="420" fill="var(--surface-ink)" fontSize="10" textAnchor="middle" className="font-serif opacity-80">Animales en el bosque</text>
-        
-        {/* Tecnología */}
-        <circle cx="400" cy="180" r="8" fill="#ec4899" />
-        <text x="400" y="200" fill="var(--surface-ink)" fontSize="10" textAnchor="middle" className="font-serif opacity-80">Tecnología</text>
-
-        {/* Compras */}
-        <circle cx="480" cy="450" r="8" fill="#38bdf8" />
-        <text x="480" y="470" fill="var(--surface-ink)" fontSize="10" textAnchor="middle" className="font-serif opacity-80">Compras</text>
-
-        {/* Viaje a la Ciudad */}
-        <circle cx="650" cy="250" r="8" fill="#a78bfa" />
-        <text x="650" y="270" fill="var(--surface-ink)" fontSize="10" textAnchor="middle" className="font-serif opacity-80">Viaje a la Ciudad</text>
-
-        {/* Proyectos de Fotografía (Large cluster) */}
-        <circle cx="750" cy="400" r="12" fill="#a855f7" />
-        <text x="750" y="425" fill="var(--surface-ink)" fontSize="10" textAnchor="middle" className="font-serif opacity-80">Proyectos de Fotografía</text>
-
-        {/* --- Leaf Pages (White dots) --- */}
-        {/* Around Animales */}
-        {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => {
-          const rad = (angle * Math.PI) / 180;
-          const x = 350 + Math.cos(rad) * 45;
-          const y = 400 + Math.sin(rad) * 45;
-          return (
-            <g key={`anim-${i}`}>
-              <line x1="350" y1="400" x2={x} y2={y} stroke="var(--surface-hairline)" />
-              <circle cx={x} cy={y} r="2.5" fill="var(--surface-ink)" className="opacity-80" />
-            </g>
-          );
+      <g stroke="rgba(255,255,255,.15)" strokeWidth="1">
+        {LINKS.map(([from, to]) => (
+          <line key={`${from}-${to}`} x1={nodeById[from].x} y1={nodeById[from].y} x2={nodeById[to].x} y2={nodeById[to].y} />
+        ))}
+        {LEAVES.map(([x, y], index) => {
+          const parent = NODES[index % 8];
+          return <line key={`leaf-link-${index}`} x1={parent.x} y1={parent.y} x2={x} y2={y} />;
         })}
-        {/* Around Foto */}
-        {[0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340].map((angle, i) => {
-          const rad = (angle * Math.PI) / 180;
-          const dist = i % 2 === 0 ? 50 : 70;
-          const x = 750 + Math.cos(rad) * dist;
-          const y = 400 + Math.sin(rad) * dist;
-          return (
-            <g key={`foto-${i}`}>
-              <line x1="750" y1="400" x2={x} y2={y} stroke="var(--surface-hairline)" />
-              <circle cx={x} cy={y} r="2" fill="var(--surface-ink)" className="opacity-70" />
-            </g>
-          );
-        })}
-        {/* Around Tech */}
-        {[200, 240, 280, 320, 360, 40].map((angle, i) => {
-          const rad = (angle * Math.PI) / 180;
-          const x = 400 + Math.cos(rad) * 40;
-          const y = 180 + Math.sin(rad) * 40;
-          return (
-            <g key={`tech-${i}`}>
-              <line x1="400" y1="180" x2={x} y2={y} stroke="var(--surface-hairline)" />
-              <circle cx={x} cy={y} r="2.5" fill="var(--surface-ink)" className="opacity-80" />
-            </g>
-          );
-        })}
-      </svg>
-    </div>
+      </g>
+
+      <g>
+        {LEAVES.map(([x, y], index) => (
+          <g key={`leaf-${index}`}>
+            <circle cx={x} cy={y} r="3.2" fill={NODES[index % 8].color} opacity=".95" />
+            {index % 3 === 0 && <text x={x} y={y + 11} textAnchor="middle" fill="rgba(255,255,255,.55)" fontSize="6">Página {index % 8 + 1}</text>}
+          </g>
+        ))}
+      </g>
+
+      <g>
+        {NODES.map((node) => (
+          <g key={node.id}>
+            <circle cx={node.x} cy={node.y} r={node.radius + 6} fill={node.color} opacity=".14" filter="url(#constellation-glow)" />
+            <circle cx={node.x} cy={node.y} r={node.radius} fill={node.color} />
+            <text x={node.x} y={node.y + node.radius + 12} textAnchor="middle" fill="rgba(255,255,255,.78)" fontSize="8">{node.label}</text>
+          </g>
+        ))}
+      </g>
+    </svg>
+  );
+}
+
+function GraphControl({ active, children }: { active?: boolean; children: React.ReactNode }) {
+  return (
+    <span className={`flex h-[38px] w-[38px] items-center justify-center rounded-[11px] border ${active ? "border-star/60 bg-star/10 text-star" : "border-mockup-hairline bg-mockup-panel text-mockup-ink-soft"}`}>
+      {children}
+    </span>
   );
 }
 
 export default function ConstellationMockup({ active }: { active: boolean }) {
   const rootRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(0);
 
-  // Resize to fit width while maintaining design aspect ratio.
   useEffect(() => {
-    const observer = new ResizeObserver((entries) => {
-      const { width } = entries[0].contentRect;
-      setScale(width / DESIGN_W);
-    });
-    if (rootRef.current) observer.observe(rootRef.current);
-    return () => observer.disconnect();
+    const el = rootRef.current;
+    if (!el) return;
+    const measure = () => {
+      const width = el.clientWidth;
+      if (width) setScale(width / DESIGN_W);
+    };
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    const io = new IntersectionObserver(measure, { rootMargin: "200px" });
+    io.observe(el);
+    return () => {
+      ro.disconnect();
+      io.disconnect();
+    };
   }, []);
 
   return (
     <div ref={rootRef} className="absolute inset-0 overflow-hidden bg-cosmos-void font-[family-name:var(--font-sans)] text-mockup-ink">
-      <MockupStarfield active={active} className="absolute inset-0 h-full w-full opacity-60" />
+      <MockupStarfield active={active} className="absolute inset-0 h-full w-full opacity-70" />
 
-      <div
-        className="absolute left-0 top-0 origin-top-left"
-        style={{
-          width: DESIGN_W,
-          height: DESIGN_H,
-          transform: `scale(${scale})`,
-          visibility: scale ? "visible" : "hidden",
-        }}
-      >
-        {/* Top Header */}
-        <div className="absolute left-[80px] top-[40px] z-20">
-          <p className="flex items-center gap-2 font-[family-name:var(--font-pixel)] text-[12px] tracking-[0.28em] text-star/85">
-            ✦ MAPA ESTELAR ✦
-          </p>
-          <h1 className="mt-2 font-[family-name:var(--font-serif)] text-[48px] font-light text-mockup-ink">Tu constelación</h1>
-          
-          <div className="mt-6 flex items-center gap-[24px] rounded-[24px] border-[0.5px] border-mockup-hairline bg-cosmos-void/60 px-[32px] py-[12px] backdrop-blur-md w-fit">
-            <div className="text-center">
-              <span className="block font-[family-name:var(--font-serif)] text-[24px] text-mockup-ink">8</span>
-              <span className="font-[family-name:var(--font-pixel)] text-[10px] tracking-widest text-mockup-ink-ghost">DIARIOS</span>
-            </div>
-            <div className="h-[30px] w-px bg-mockup-panel" />
-            <div className="text-center">
-              <span className="block font-[family-name:var(--font-serif)] text-[24px] text-mockup-ink">88</span>
-              <span className="font-[family-name:var(--font-pixel)] text-[10px] tracking-widest text-mockup-ink-ghost">PÁGINAS</span>
-            </div>
-            <div className="h-[30px] w-px bg-mockup-panel" />
-            <div className="text-center">
-              <span className="block font-[family-name:var(--font-serif)] text-[24px] text-mockup-ink">4</span>
-              <span className="font-[family-name:var(--font-pixel)] text-[10px] tracking-widest text-mockup-ink-ghost">ETIQUETAS</span>
-            </div>
+      <div className="absolute left-0 top-0 origin-top-left" style={{ width: DESIGN_W, height: DESIGN_H, transform: `scale(${scale})`, visibility: scale ? "visible" : "hidden" }}>
+        <Graph />
+
+        <header className="absolute left-[96px] top-[45px] z-20 w-[275px]">
+          <p className="font-[family-name:var(--font-pixel)] text-[11px] tracking-[0.3em] text-star">NODOS · VÍNCULOS</p>
+          <h1 className="mt-[22px] font-[family-name:var(--font-serif)] text-[38px] font-light leading-none text-mockup-ink">
+            Tu <span className="italic text-star">constelación</span>
+          </h1>
+          <p className="mt-[16px] font-[family-name:var(--font-serif)] text-[15px] font-semibold italic text-mockup-ink-ghost">Así se ve una mente conectada.</p>
+
+          <div className="mt-[24px] flex items-center">
+            {[["10", "DIARIOS"], ["41", "PÁGINAS"], ["3", "ETIQUETAS"]].map(([value, label], index) => (
+              <span key={label} className="flex items-center">
+                {index > 0 && <span className="mx-[15px] h-[28px] w-px bg-mockup-panel" />}
+                <span className="text-center">
+                  <span className="block font-[family-name:var(--font-serif)] text-[23px] leading-[24px] text-mockup-ink">{value}</span>
+                  <span className="mt-[5px] block font-[family-name:var(--font-pixel)] text-[8px] tracking-[0.2em] text-mockup-ink-ghost">{label}</span>
+                </span>
+              </span>
+            ))}
+          </div>
+        </header>
+
+        <div className="absolute right-[30px] top-[47px] z-20">
+          <div className="flex h-[38px] w-[292px] items-center gap-[10px] rounded-full border border-mockup-hairline bg-cosmos-void/75 px-[15px] text-[12px] text-mockup-ink-ghost backdrop-blur-md">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden><circle cx="11" cy="11" r="7" /><path d="m20 20-3-3" /></svg>
+            Buscar nodo, página o etiqueta...
+          </div>
+          <div className="mt-[9px] flex justify-end gap-[8px]">
+            <GraphControl active><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8Z" /><circle cx="7" cy="7" r="1" /></svg></GraphControl>
+            <GraphControl><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden><circle cx="12" cy="12" r="3" /><circle cx="19" cy="6" r="2" /><circle cx="5" cy="18" r="2" /><path d="m12 9 5-2M7 16l5-2" /></svg></GraphControl>
+            <GraphControl><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5" /><circle cx="12" cy="12" r="3" /></svg></GraphControl>
+            <GraphControl><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden><path d="M4 6h16M7 12h10M10 18h4" /></svg></GraphControl>
           </div>
         </div>
 
-        {/* Top Right Controls */}
-        <div className="absolute right-[40px] top-[40px] z-20 flex items-center gap-4">
-          <div className="flex h-[44px] w-[320px] items-center gap-3 rounded-full border border-mockup-hairline bg-mockup-panel px-4 backdrop-blur-md">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--surface-ink-ghost)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <span className="text-[14px] text-mockup-ink-ghost">Buscar nodo, página o etiqueta...</span>
-          </div>
-          
-          <div className="flex gap-2">
-            <button className="flex h-[44px] w-[44px] items-center justify-center rounded-2xl border border-star/30 bg-star/10 text-star backdrop-blur-md">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-            </button>
-            <button className="flex h-[44px] w-[44px] items-center justify-center rounded-2xl border border-mockup-hairline bg-mockup-panel text-mockup-ink-soft backdrop-blur-md">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="3"></circle><circle cx="19" cy="6" r="2"></circle><circle cx="5" cy="18" r="2"></circle><path d="M12 9l5-2"></path><path d="M7 16l5-2"></path></svg>
-            </button>
-            <button className="flex h-[44px] w-[44px] items-center justify-center rounded-2xl border border-mockup-hairline bg-mockup-panel text-mockup-ink-soft backdrop-blur-md">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 3h18v18H3z"></path><path d="M3 9h18"></path><path d="M9 21V9"></path></svg>
-            </button>
-            <button className="flex h-[44px] w-[44px] items-center justify-center rounded-2xl border border-mockup-hairline bg-mockup-panel text-mockup-ink-soft backdrop-blur-md">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
-            </button>
-          </div>
-        </div>
-
-        {/* The Graph with Blur and CTA Overlay */}
-        <div className="absolute inset-0 z-10 pointer-events-none">
-          <div className="absolute inset-0 blur-[8px] opacity-40">
-            <ConstellationGraph />
-          </div>
-          
-          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-auto">
-            <div className="flex flex-col items-center rounded-3xl border border-mockup-hairline bg-cosmos-void/60 p-10 shadow-2xl backdrop-blur-xl">
-              <svg className="mb-4 text-star" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              <h3 className="font-[family-name:var(--font-serif)] text-[32px] text-mockup-ink">
-                Descubre tu universo
-              </h3>
-              <p className="mt-3 max-w-[320px] text-center font-[family-name:var(--font-sans)] text-[16px] text-mockup-ink-soft">
-                Instala la aplicación para ver tu propia constelación de diarios, notas y etiquetas interconectadas.
-              </p>
-              <button className="mt-8 rounded-full bg-star px-8 py-3.5 font-[family-name:var(--font-sans)] text-[15px] font-semibold text-cosmos-void shadow-[0_0_20px_var(--color-star)] transition-transform hover:scale-105 active:scale-95">
-                Descargar aplicación
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Legend Bottom */}
-        <div className="absolute bottom-[40px] left-1/2 flex -translate-x-1/2 items-center gap-[32px] rounded-full border border-mockup-hairline bg-cosmos-void/80 px-[40px] py-[16px] backdrop-blur-md">
-          <div className="flex items-center gap-3">
-            <span className="block h-4 w-4 rounded-full bg-[#60a5fa]" />
-            <span className="font-[family-name:var(--font-pixel)] text-[11px] tracking-wider text-mockup-ink-soft">Diario</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="block h-3 w-3 rounded-full bg-mockup-ink" />
-            <span className="font-[family-name:var(--font-pixel)] text-[11px] tracking-wider text-mockup-ink-soft">Página</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="block h-4 w-4 rounded-full bg-[#d97706]" />
-            <span className="font-[family-name:var(--font-pixel)] text-[11px] tracking-wider text-mockup-ink-soft">Etiqueta</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="block h-[2px] w-6 bg-mockup-ink-ghost" />
-            <span className="font-[family-name:var(--font-pixel)] text-[11px] tracking-wider text-mockup-ink-soft">Backlink</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="block h-[2px] w-6 border-b-[2px] border-dotted border-mockup-ink-ghost" />
-            <span className="font-[family-name:var(--font-pixel)] text-[11px] tracking-wider text-mockup-ink-soft">Enlaces en común</span>
-          </div>
+        <div className="absolute bottom-[28px] left-1/2 z-20 flex -translate-x-1/2 items-center gap-[22px] rounded-full border border-mockup-hairline bg-cosmos-void/85 px-[22px] py-[11px] backdrop-blur-md">
+          {[
+            ["bg-gradient-to-br from-[#7d67e8] via-[#7ed6ce] to-[#e59bcf]", "Diario"],
+            ["bg-star", "Página"],
+            ["bg-[#e4ad59]", "#etiqueta"],
+          ].map(([color, label]) => (
+            <span key={label} className="flex items-center gap-[7px] text-[11px] text-mockup-ink-soft"><i className={`h-[10px] w-[10px] rounded-full ${color}`} />{label}</span>
+          ))}
+          <span className="flex items-center gap-[7px] text-[11px] text-mockup-ink-soft"><i className="h-px w-[20px] bg-star/45" />Backlink</span>
+          <span className="flex items-center gap-[7px] text-[11px] text-mockup-ink-soft"><i className="w-[20px] border-t border-dotted border-[#9f8de9]" />Enlaces en común</span>
         </div>
       </div>
     </div>

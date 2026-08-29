@@ -23,7 +23,7 @@ const SCREENS = [
   { id: "inicio", label: "Inicio", Component: HomeMockup },
   { id: "diarios", label: "Diarios", Component: AppMockup },
   { id: "constelacion", label: "Constelación", Component: ConstellationMockup },
-  { id: "historia", label: "Historia", Component: HistoryMockup },
+  { id: "historia", label: "Calendario", Component: HistoryMockup },
 ] as const;
 
 type CarouselDirection = "down" | "up";
@@ -209,71 +209,64 @@ export default function ThemeCarousel() {
         </div>
 
         {/* Tablet + Phone Container */}
-        <div className={`relative mx-auto w-full max-w-[1200px] mt-10 mockup-${surfaceStyle}`}>
-          
-          {/* Left arrow — absolutely positioned to the left of the tablet */}
-          <button
-            onClick={() => step(-1)}
-            aria-label="Pantalla anterior"
-            className="absolute top-1/2 -left-4 sm:-left-16 -translate-y-1/2 z-40 hidden sm:flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/15 bg-black/40 text-paper-bright backdrop-blur-md transition hover:border-star hover:text-star"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="m15 18-6-6 6-6" />
-            </svg>
-          </button>
-
-          {/* Right arrow — absolutely positioned to the right of the phone */}
-          <button
-            onClick={() => step(1)}
-            aria-label="Pantalla siguiente"
-            className="absolute top-1/2 -translate-y-1/2 z-40 hidden sm:flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/15 bg-black/40 text-paper-bright backdrop-blur-md transition hover:border-star hover:text-star sm:-right-[88px] lg:-right-[112px] xl:-right-[160px]"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="m9 18 6-6-6-6" />
-            </svg>
-          </button>
-
-          {/* Tablet — carousel */}
-          <div className="w-full">
-            <TabletFrame>
-            <div
-              className="relative aspect-[16/10] w-full overflow-hidden rounded-[16px] bg-cosmos-void sm:rounded-[22px]"
-              onTouchStart={onTouchStart}
-              onTouchEnd={onTouchEnd}
+        <div className={`mx-auto mt-10 w-full max-w-[1200px] mockup-${surfaceStyle}`}>
+          <div className="relative w-full">
+            {/* Carousel arrows stay vertically centered on the tablet. */}
+            <button
+              onClick={() => step(-1)}
+              aria-label="Pantalla anterior"
+              className="absolute top-1/2 -left-4 z-40 hidden h-12 w-12 -translate-y-1/2 shrink-0 items-center justify-center rounded-full border border-white/15 bg-black/40 text-paper-bright backdrop-blur-md transition hover:border-star hover:text-star sm:-left-16 sm:flex"
             >
-              <AnimatePresence
-                initial={false}
-                mode="sync"
-                custom={screenTransition}
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+            </button>
+
+            <button
+              onClick={() => step(1)}
+              aria-label="Pantalla siguiente"
+              className="absolute top-1/2 -right-4 z-40 hidden h-12 w-12 -translate-y-1/2 shrink-0 items-center justify-center rounded-full border border-white/15 bg-black/40 text-paper-bright backdrop-blur-md transition hover:border-star hover:text-star sm:-right-16 sm:flex"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            </button>
+
+            {/* Tablet — carousel */}
+            <TabletFrame>
+              <div
+                className="relative aspect-[16/10] w-full overflow-hidden rounded-[16px] bg-cosmos-void sm:rounded-[22px]"
+                onTouchStart={onTouchStart}
+                onTouchEnd={onTouchEnd}
               >
-                <CarouselScreen
-                  key={screen.id}
-                  screen={screen}
-                  transition={screenTransition}
-                />
-              </AnimatePresence>
+                <AnimatePresence
+                  initial={false}
+                  mode="sync"
+                  custom={screenTransition}
+                >
+                  <CarouselScreen
+                    key={screen.id}
+                    screen={screen}
+                    transition={screenTransition}
+                  />
+                </AnimatePresence>
 
-              {/* NavRail */}
-              <NavRail activeIndex={index} />
+                {/* NavRail */}
+                <NavRail activeIndex={index} />
 
-              {/* Vignette */}
-              <div className="pointer-events-none absolute inset-0 rounded-3xl shadow-[inset_0_0_80px_rgba(0,0,0,0.6)] z-30" />
-            </div>
+                {/* Vignette */}
+                <div className="pointer-events-none absolute inset-0 z-30 rounded-3xl shadow-[inset_0_0_80px_rgba(0,0,0,0.6)]" />
+              </div>
             </TabletFrame>
           </div>
 
-
-
-          {/* Phone — absolutely positioned to the right side of the tablet */}
-          <div className="hidden sm:block absolute bottom-0 -right-6 lg:-right-12 xl:-right-24 z-30 w-[240px] xl:w-[280px]">
-            <PhoneShowcase screen={SCREENS[index].id} className="w-full drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)]" />
+          {/* Phone — centered directly below the tablet on every breakpoint. */}
+          <div className="mt-12 flex justify-center sm:mt-16">
+            <PhoneShowcase
+              screen={SCREENS[index].id}
+              className="w-[280px] max-w-full drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)]"
+            />
           </div>
-
-        </div>
-
-        {/* Phone — mobile fallback (below tablet on small screens) */}
-        <div className="mt-12 flex justify-center sm:hidden">
-          <PhoneShowcase screen={SCREENS[index].id} className="w-[280px]" />
         </div>
 
         {/* Dots + active screen label */}
@@ -310,7 +303,7 @@ export default function ThemeCarousel() {
           </div>
           
           <p className="max-w-2xl text-center text-sm leading-6 text-paper-bright/60">
-            Explora Inicio, Diarios, Constelación e Historia. Cada pantalla
+            Explora Inicio, Diarios, Constelación y Calendario. Cada pantalla
             comparte el mismo acento y conserva su propia forma de ayudarte a
             escribir, conectar y recordar.
           </p>

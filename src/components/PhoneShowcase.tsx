@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import MockupStarfield from "./MockupStarfield";
 import { useSyncedAnimationDelay } from "./HomeMockup";
+import { mockupCover } from "@/lib/assets";
 
 /**
  * Portrait phone mockup of the app, inside a CSS phone bezel. Shows the same
@@ -19,20 +20,22 @@ const WASH = "linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.85))";
 const COVER_WASH = "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.55))";
 
 const RECENT = [
-  { title: "Compras", meta: "3 PÁG · HOY", cover: "url('/mockups/cover_compras.png') center/cover" },
-  { title: "Viaje a Kioto", meta: "12 PÁG · AYER", cover: "url('/mockups/cover_kioto.png') center/cover" },
-  { title: "Historias", meta: "2 PÁG · HOY", cover: "url('/mockups/cover_historias.png') center/cover" },
-  { title: "Inolvidable", meta: "5 PÁG · HOY", cover: "url('/mockups/cover_inolvidable.png') center/cover" },
-  { title: "Notas de Arquitectura", meta: "1 PÁG · 20 JUN", cover: "url('/mockups/cover_arquitectura.png') center/cover" },
+  { title: "Nuevo diario", meta: "0 PÁG · 26 JUL", cover: null, isNew: true },
+  {
+    title: "Nota del 26 jul 2026",
+    meta: "1 PÁG · 26 JUL",
+    cover: mockupCover("cover_arquitectura.png"),
+    isNew: false,
+  },
 ];
 
 const BOOKS = [
-  { title: "Compras", pages: 3, edited: "EDITADO HACE 1 D", cover: "url('/mockups/cover_compras.png') center/cover" },
-  { title: "Día de caza", pages: 0, edited: "EDITADO HACE 1 D", cover: "url('/mockups/cover_caza.png') center/cover" },
-  { title: "Historias", pages: 2, edited: "EDITADO HACE 13 H", cover: "url('/mockups/cover_historias.png') center/cover" },
-  { title: "Inolvidable", pages: 5, edited: "EDITADO HACE 2 H", cover: "url('/mockups/cover_inolvidable.png') center/cover" },
-  { title: "Bocetos y código", pages: 44, edited: "EDITADO HACE 5 H", cover: "url('/mockups/cover_codigo.png') center/cover" },
-  { title: "Diario personal", pages: 83, edited: "EDITADO HACE 1 D", cover: "url('/mockups/cover_diario.png') center/cover" },
+  { title: "Compras", pages: 3, edited: "EDITADO HACE 1 D", cover: mockupCover("cover_compras.png") },
+  { title: "Día de caza", pages: 0, edited: "EDITADO HACE 1 D", cover: mockupCover("cover_caza.png") },
+  { title: "Historias", pages: 2, edited: "EDITADO HACE 13 H", cover: mockupCover("cover_historias.png") },
+  { title: "Inolvidable", pages: 5, edited: "EDITADO HACE 2 H", cover: mockupCover("cover_inolvidable.png") },
+  { title: "Bocetos y código", pages: 44, edited: "EDITADO HACE 5 H", cover: mockupCover("cover_codigo.png") },
+  { title: "Diario personal", pages: 83, edited: "EDITADO HACE 1 D", cover: mockupCover("cover_diario.png") },
 ];
 
 function StatusBar() {
@@ -109,59 +112,88 @@ function BreathingBorder({
 }
 
 function PhoneInicio() {
+  const quoteDelay = useSyncedAnimationDelay();
+
   return (
     <>
       <StatusBar />
-      <span className="absolute left-[16px] top-[34px] z-20 block h-[30px] w-[30px] rounded-full bg-gradient-to-br from-tag-love to-tag-dream ring-1 ring-white/20" />
 
-      <div className="flex flex-col items-center px-[16px] pt-[34px] text-center">
-        <p className="font-[family-name:var(--font-pixel)] text-[11px] tracking-[0.26em] text-star/85">✦ STARS ALIKE ✦</p>
-        <h3 className="mt-[10px] font-[family-name:var(--font-serif)] text-[26px] font-light leading-[27px] text-mockup-ink">Buenas tardes</h3>
-        <p className="shimmer-accent mt-[6px] font-[family-name:var(--font-sans)] text-[13px] italic" style={{ animationDelay: useSyncedAnimationDelay() }}>Pequeño bloque, gran historia.</p>
-        <div className="mt-[16px] flex items-center gap-[8px] rounded-full border-[0.5px] border-mockup-hairline bg-cosmos-void/40 px-[10px] py-[8px]">
-          <StatI value="8" label="DIARIOS" /><Sep /><StatI value="138" label="PALABRAS" /><Sep /><StatI value="24" label="SEMANA" /><Sep /><StatI value="4" label="RACHA" accent />
-        </div>
+      <div className="absolute left-[24px] right-[20px] top-[54px]">
+        <p className="font-[family-name:var(--font-pixel)] text-[10px] tracking-[0.28em] text-mockup-ink-soft">
+          MIÉRCOLES <span className="text-star">· 26 DE AGOSTO</span>
+        </p>
+        <h3 className="mt-[20px] font-[family-name:var(--font-serif)] text-[39px] font-light leading-[40px] tracking-[-0.035em] text-mockup-ink">
+          Buenas <span className="italic text-star">tardes</span>
+        </h3>
+        <p
+          className="shimmer-accent mt-[13px] font-[family-name:var(--font-serif)] text-[16px] italic leading-[20px]"
+          style={{ animationDelay: quoteDelay }}
+        >
+          Si no lo escribes, ¿de verdad pasó?
+        </p>
       </div>
 
-      <div className="mt-[22px] flex items-center px-[16px]">
-        <span className="font-[family-name:var(--font-pixel)] text-[11px] tracking-[0.22em] text-mockup-ink-ghost">ÚLTIMOS DIARIOS</span>
-        <span className="ml-[10px] h-px flex-1 bg-mockup-panel" />
-      </div>
-
-      <div className="mt-[14px] flex gap-[12px] px-[16px]">
-        {RECENT.map((d) => (
-          <div key={d.title} className="relative h-[206px] w-[150px] shrink-0 overflow-hidden rounded-[13px] bg-cosmos-smoke">
-            <span className="absolute inset-0" style={{ background: d.cover }} />
-            <span className="absolute inset-x-0 bottom-0 h-[100px]" style={{ background: WASH }} />
-            <span className="absolute left-[13px] right-[13px] bottom-[18px] line-clamp-2 font-[family-name:var(--font-serif)] text-[14px] font-light leading-tight text-white">{d.title}</span>
-            <span className="absolute left-[13px] bottom-[8px] font-[family-name:var(--font-pixel)] text-[8px] tracking-[0.1em] text-white/65">{d.meta}</span>
-            <BreathingBorder w={150} h={206} radius={13} stroke={1.5} />
+      <div className="absolute left-[24px] right-[20px] top-[188px] flex items-center justify-between">
+        {[
+          ["2", "DIARIOS"],
+          ["0", "PALABRAS"],
+          ["1", "PÁGINAS"],
+        ].map(([value, label], index) => (
+          <div key={label} className="flex items-center">
+            {index > 0 && <span className="mr-[37px] h-[24px] w-px bg-mockup-panel" />}
+            <span className="w-[66px] text-center">
+              <span className="block font-[family-name:var(--font-serif)] text-[22px] leading-[24px] text-mockup-ink">{value}</span>
+              <span className="mt-[5px] block font-[family-name:var(--font-pixel)] text-[8px] tracking-[0.24em] text-mockup-ink-ghost">{label}</span>
+            </span>
           </div>
         ))}
       </div>
 
-      <div className="mt-[18px] px-[16px]">
-        <div className="paper-grain rounded-[14px] px-[16px] py-[14px] shadow-[0_14px_30px_rgba(0,0,0,0.45)]">
-          <div className="flex items-center gap-[8px]">
-            <span className="font-[family-name:var(--font-pixel)] text-[10px] tracking-[0.2em] text-paper-ink-soft/80">CONTINUAR ESCRIBIENDO</span>
-          </div>
-          <p className="mt-[10px] text-center font-[family-name:var(--font-serif)] text-[18px] italic leading-[21px] text-paper-ink">Página 7</p>
-          <div className="mt-[12px] border-t border-dashed border-paper-ink/25 pt-[10px]" />
-          <div className="flex items-center justify-between">
-            <span className="truncate font-[family-name:var(--font-pixel)] text-[9px] uppercase text-paper-ink-soft/45">Animales · hoy · 12:18</span>
-            <span className="ml-[8px] flex shrink-0 items-center gap-[2px] font-[family-name:var(--font-sans)] text-[11px] font-semibold" style={{ color: "var(--color-star)" }}>Retomar →</span>
-          </div>
-        </div>
+      <div className="absolute left-[24px] right-[20px] top-[247px] flex items-center">
+        <span className="font-[family-name:var(--font-pixel)] text-[10px] tracking-[0.25em] text-mockup-ink-ghost">ÚLTIMOS DIARIOS</span>
+        <span className="ml-[12px] h-px flex-1 bg-mockup-panel" />
       </div>
 
-      <div className="absolute bottom-[100px] left-[16px] z-20 flex h-[44px] w-[106px] items-center gap-[6px] overflow-hidden rounded-full bg-cosmos-smoke px-[16px] shadow-[0_8px_22px_rgba(0,0,0,0.5)]">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-star shrink-0"><circle cx="12" cy="12" r="9" /><path d="M12 7.5V12l3 1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
-        <span className="font-[family-name:var(--font-serif)] text-[13px] font-medium text-mockup-ink-soft">Enfoque</span>
-        <BreathingBorder w={106} h={44} radius={22} stroke={1.5} />
+      <div className="absolute left-[7px] top-[283px] flex gap-[14px]">
+        {RECENT.map((d) => (
+          <div key={d.title} className="relative h-[220px] w-[160px] shrink-0 overflow-hidden rounded-[14px] bg-cosmos-smoke">
+            {d.cover && (
+              <span
+                className="absolute inset-0 grayscale contrast-125"
+                style={{ background: d.cover }}
+              />
+            )}
+            {d.isNew && (
+              <span className="absolute inset-0 bg-[radial-gradient(circle_at_50%_48%,color-mix(in_srgb,var(--color-star)_14%,transparent),transparent_35%)]">
+                <svg className="absolute left-1/2 top-[43%] -translate-x-1/2 -translate-y-1/2 text-star drop-shadow-[0_0_16px_var(--color-star)]" width="46" height="46" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                  <path d="M12 1.5c1.2 6.4 4.1 9.3 10.5 10.5-6.4 1.2-9.3 4.1-10.5 10.5C10.8 16.1 7.9 13.2 1.5 12 7.9 10.8 10.8 7.9 12 1.5Z" />
+                </svg>
+              </span>
+            )}
+            <span className="absolute inset-x-0 bottom-0 h-[112px]" style={{ background: WASH }} />
+            <span className="absolute left-[14px] right-[14px] bottom-[31px] line-clamp-2 font-[family-name:var(--font-serif)] text-[17px] font-light leading-[19px] text-white">{d.title}</span>
+            <span className="absolute left-[14px] bottom-[15px] font-[family-name:var(--font-pixel)] text-[8px] tracking-[0.11em] text-white/65">{d.meta}</span>
+            <BreathingBorder w={160} h={220} radius={14} stroke={1.5} />
+          </div>
+        ))}
       </div>
-      <div className="absolute bottom-[100px] right-[16px] z-20 flex h-[44px] items-center gap-[6px] rounded-2xl bg-star px-[16px] text-cosmos-void shadow-[0_8px_22px_rgba(0,0,0,0.5)]">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
-        <span className="font-[family-name:var(--font-serif)] text-[13px] font-medium">Nota rápida</span>
+
+      <div className="absolute left-[24px] right-[24px] top-[537px]">
+        <div className="paper-grain h-[151px] rounded-[15px] px-[18px] py-[17px] shadow-[0_14px_30px_rgba(0,0,0,0.45)]">
+          <div className="flex items-center gap-[9px]">
+            <span className="breathe-dot h-[6px] w-[6px] rounded-full bg-star shadow-[0_0_8px_var(--color-star)]" />
+            <span className="font-[family-name:var(--font-pixel)] text-[9px] tracking-[0.22em] text-paper-ink-soft/75">CONTINUAR ESCRIBIENDO</span>
+          </div>
+          <p className="mt-[17px] text-center font-[family-name:var(--font-serif)] text-[22px] italic leading-[24px] text-paper-ink">Nota rápida</p>
+          <div className="mt-[20px] border-t border-dashed border-paper-ink/20" />
+          <div className="mt-[13px] flex items-center justify-between">
+            <span className="truncate font-[family-name:var(--font-pixel)] text-[8px] uppercase tracking-[0.09em] text-paper-ink-soft/40">NOTA DEL 26 JUL 2026 · 26 JUL</span>
+            <span className="ml-[8px] flex shrink-0 items-center gap-[4px] font-[family-name:var(--font-sans)] text-[11px] font-semibold" style={{ color: "var(--color-star)" }}>
+              Retomar
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+            </span>
+          </div>
+        </div>
       </div>
     </>
   );
@@ -240,11 +272,6 @@ function PhoneDiarios() {
         ))}
       </div>
 
-      {/* new-diary FAB */}
-      <div className="absolute bottom-[18px] right-[16px] z-20 flex h-[44px] items-center gap-[6px] rounded-2xl bg-star px-[16px] text-cosmos-void shadow-[0_8px_22px_rgba(0,0,0,0.5)]">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
-        <span className="font-[family-name:var(--font-serif)] text-[13px] font-medium">Nuevo diario</span>
-      </div>
     </>
   );
 }
@@ -517,54 +544,62 @@ function PhoneBottomNav({ activeScreen }: { activeScreen: string }) {
     },
     {
       id: "historia",
-      label: "Tu Historia",
+      label: "Calendario",
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-        </svg>
-      )
-    },
-    {
-      id: "ajustes",
-      label: "Ajustes",
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="3"></circle>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          <rect x="3" y="5" width="18" height="16" rx="2" />
+          <path d="M16 3v4M8 3v4M3 10h18" />
+          <path d="M8 14h2M14 14h2M8 18h2M14 18h2" />
         </svg>
       )
     },
   ];
 
   return (
-    <div className="absolute bottom-0 left-0 right-0 h-[84px] flex items-start justify-around px-2 pt-2 z-40 border-t border-mockup-hairline rounded-b-[1.75rem]" style={{ backgroundColor: "var(--surface-void)" }}>
-      {tabs.map((tab) => {
-        const isActive = tab.id === activeScreen;
-        return (
-          <button key={tab.id} className="group flex flex-col items-center justify-start gap-1 w-[60px]">
-            <div
-              className={`flex items-center justify-center w-[40px] h-[32px] rounded-full transition-colors ${isActive ? "text-star" : "text-mockup-ink-ghost group-hover:text-mockup-ink-soft"}`}
-                style={isActive ? { backgroundColor: "var(--color-star-ghost)" } : undefined}
-              >
+    <div className="pointer-events-none absolute inset-0 z-40">
+      <span
+        aria-label="Ajustes"
+        className={`pointer-events-auto absolute left-[14px] top-[650px] h-[52px] w-[52px] overflow-hidden rounded-full border shadow-[0_8px_24px_rgba(0,0,0,0.65)] ${
+          activeScreen === "ajustes" ? "border-star" : "border-white/15"
+        }`}
+        style={{
+          background:
+            "radial-gradient(circle at 40% 28%, rgba(255,255,255,.95) 0 2px, transparent 3px), radial-gradient(circle at 31% 67%, #f3a4d5 0 5px, transparent 6px), radial-gradient(circle at 61% 58%, #f6b5df 0 4px, transparent 5px), linear-gradient(145deg, #a878ee, #49327e 48%, #141526)",
+        }}
+      >
+        <span className="absolute left-[9px] top-[8px] h-[12px] w-[12px] rounded-full bg-white/75 shadow-[0_0_10px_white]" />
+        <span className="absolute bottom-[7px] left-[17px] h-[25px] w-px -rotate-[28deg] bg-white/25" />
+      </span>
+
+      <div className="pointer-events-auto absolute left-[76px] top-[648px] flex h-[58px] w-[204px] items-center justify-around rounded-full border border-white/[0.07] bg-[#15151f]/95 px-[8px] shadow-[0_12px_28px_rgba(0,0,0,0.72)] backdrop-blur-md">
+        {tabs.map((tab) => {
+          const isActive = tab.id === activeScreen;
+          return (
+            <span
+              key={tab.id}
+              aria-label={tab.label}
+              className={`flex h-[44px] w-[42px] items-center justify-center rounded-full transition-colors ${
+                isActive
+                  ? "bg-star/[0.09] text-star drop-shadow-[0_0_9px_var(--color-star)]"
+                  : "text-white/38"
+              }`}
+            >
               {tab.icon}
-            </div>
-            <div className="flex flex-col items-center h-[18px]">
-              <span
-                className={`font-[family-name:var(--font-serif)] text-[10px] tracking-wide transition-colors ${
-                  isActive ? "text-star font-bold italic" : "text-mockup-ink-ghost"
-                }`}
-              >
-                {tab.label}
-              </span>
-              <div
-                className={`h-[2.5px] w-1.5 rounded-full bg-star mt-[2px] transition-all duration-300 ${
-                  isActive ? "opacity-100 scale-100" : "opacity-0 scale-0"
-                }`}
-              />
-            </div>
-          </button>
-        );
-      })}
+            </span>
+          );
+        })}
+      </div>
+
+      <span className="pointer-events-auto absolute right-[12px] top-[648px] flex h-[58px] w-[58px] items-center justify-center rounded-full bg-star text-[35px] font-light leading-none text-cosmos-void shadow-[0_10px_28px_rgba(0,0,0,0.65)]">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" aria-hidden><path d="M12 4v16M4 12h16" /></svg>
+        <svg className="absolute -top-[13px] left-1/2 -translate-x-1/2 text-star" width="15" height="8" viewBox="0 0 15 8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="m2 6 5.5-4L13 6" /></svg>
+      </span>
+
+      <div className="absolute inset-x-0 bottom-0 flex h-[43px] items-center justify-around bg-black/85 px-[50px] text-white/85">
+        <span className="flex gap-[3px]" aria-hidden>{[0, 1, 2].map((bar) => <i key={bar} className="block h-[14px] w-[2px] rounded-full bg-current" />)}</span>
+        <span className="h-[17px] w-[17px] rounded-[6px] border-[1.5px] border-current" aria-hidden />
+        <svg width="16" height="21" viewBox="0 0 16 21" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M13.5 2.5 3.5 10.5l10 8" /></svg>
+      </div>
     </div>
   );
 }
