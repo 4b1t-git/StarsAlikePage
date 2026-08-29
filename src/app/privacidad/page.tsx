@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-const UPDATED = "7 de agosto de 2026";
+const UPDATED = "29 de agosto de 2026";
 
 export default function PrivacidadPage() {
   return (
@@ -37,9 +37,9 @@ export default function PrivacidadPage() {
             </h2>
             <p className="mt-4">
               Esta política explica el tratamiento de datos en la aplicación
-              Android Stars Alike y en starsalike.app. El responsable del
-              tratamiento es Stars Alike. Para consultas de privacidad puedes
-              escribir a{" "}
+              Android Stars Alike y en este sitio web, publicado en
+              4b1t-git.github.io/StarsAlikePage. El responsable del tratamiento
+              es Stars Alike. Para consultas de privacidad puedes escribir a{" "}
               <a
                 href="mailto:hola@starsalike.app"
                 className="text-star underline underline-offset-4"
@@ -108,12 +108,14 @@ export default function PrivacidadPage() {
               autenticación, sincronización, almacenamiento, funciones de
               servidor, protección de la app y diagnóstico; Google Play para
               distribución y compras; Unsplash para la búsqueda opcional de
-              imágenes; y Vercel para alojar y medir este sitio.
+              imágenes; y GitHub Pages para alojar este sitio.
             </p>
             <p className="mt-4">
-              Vercel Web Analytics procesa métricas agregadas de navegación sin
-              cookies de terceros. No vendemos datos personales ni los usamos
-              para publicidad dirigida.
+              Este sitio es estático y no incorpora analítica, cookies de
+              seguimiento ni perfilado. GitHub, como proveedor de alojamiento,
+              puede registrar la dirección IP y datos técnicos de la solicitud
+              para servir las páginas y proteger el servicio. No vendemos datos
+              personales ni los usamos para publicidad dirigida.
             </p>
           </section>
 

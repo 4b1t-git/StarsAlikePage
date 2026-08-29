@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter, VT323 } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import CosmicSubstrate from "@/components/CosmicSubstrate";
 import AccentChoreography from "@/components/AccentChoreography";
@@ -85,7 +84,6 @@ export default function RootLayout({
         <CosmicSubstrate />
 
         {children}
-        <Analytics />
       </body>
     </html>
   );
