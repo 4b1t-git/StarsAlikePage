@@ -1,7 +1,9 @@
-/** Canonical public URL of the site. Override per-environment with
- * NEXT_PUBLIC_SITE_URL (e.g. preview deploys). */
+/** Canonical public URL of the site, used for metadata, sitemap and robots.
+ * Defaults to the production GitHub Pages address so local builds emit real
+ * URLs. Override per-environment with NEXT_PUBLIC_SITE_URL (e.g. a custom
+ * domain or a preview deploy). */
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://starsalike.app"
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://4b1t-git.github.io/StarsAlikePage"
 ).replace(/\/$/, "");
 
 export const SITE_NAME = "Stars Alike";

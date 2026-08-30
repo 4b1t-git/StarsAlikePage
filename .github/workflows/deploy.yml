@@ -19,9 +19,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      # Project site: the app is served from https://<owner>.github.io/StarsAlikePage/
+      # Project site: the app is served from a sub-directory, not the domain
+      # root. SITE_URL already defaults to this deployment in src/lib/site.ts.
       NEXT_PUBLIC_BASE_PATH: /StarsAlikePage
-      NEXT_PUBLIC_SITE_URL: https://4b1t-git.github.io/StarsAlikePage
     steps:
       - uses: actions/checkout@v4
 
