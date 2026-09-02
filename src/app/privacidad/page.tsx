@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-const UPDATED = "29 de agosto de 2026";
+const UPDATED = "1 de septiembre de 2026";
 
 export default function PrivacidadPage() {
   return (
@@ -41,10 +41,10 @@ export default function PrivacidadPage() {
               4b1t-git.github.io/StarsAlikePage. El responsable del tratamiento
               es Stars Alike. Para consultas de privacidad puedes escribir a{" "}
               <a
-                href="mailto:hola@starsalike.app"
+                href="mailto:starsalike.soporte@gmail.com"
                 className="text-star underline underline-offset-4"
               >
-                hola@starsalike.app
+                starsalike.soporte@gmail.com
               </a>
               .
             </p>
