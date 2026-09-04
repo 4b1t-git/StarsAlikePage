@@ -164,10 +164,23 @@ function PhoneInicio() {
               />
             )}
             {d.isNew && (
-              <span className="absolute inset-0 bg-[radial-gradient(circle_at_50%_48%,color-mix(in_srgb,var(--color-star)_14%,transparent),transparent_35%)]">
-                <svg className="absolute left-1/2 top-[43%] -translate-x-1/2 -translate-y-1/2 text-star drop-shadow-[0_0_16px_var(--color-star)]" width="46" height="46" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                  <path d="M12 1.5c1.2 6.4 4.1 9.3 10.5 10.5-6.4 1.2-9.3 4.1-10.5 10.5C10.8 16.1 7.9 13.2 1.5 12 7.9 10.8 10.8 7.9 12 1.5Z" />
-                </svg>
+              <span className="absolute inset-0 bg-[#050505]">
+                <MockupStarfield
+                  className="absolute inset-0 h-full w-full text-white"
+                  starCount={70}
+                />
+                <span className="default-cover-flare-scale absolute left-1/2 top-1/2 text-[#40e0d0]">
+                  <svg
+                    className="default-cover-flare-glow block"
+                    width="46"
+                    height="46"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden
+                  >
+                    <path d="M12 1.5c1.2 6.4 4.1 9.3 10.5 10.5-6.4 1.2-9.3 4.1-10.5 10.5C10.8 16.1 7.9 13.2 1.5 12 7.9 10.8 10.8 7.9 12 1.5Z" />
+                  </svg>
+                </span>
               </span>
             )}
             <span className="absolute inset-x-0 bottom-0 h-[112px]" style={{ background: WASH }} />
@@ -182,12 +195,12 @@ function PhoneInicio() {
         <div className="paper-grain h-[151px] rounded-[15px] px-[18px] py-[17px] shadow-[0_14px_30px_rgba(0,0,0,0.45)]">
           <div className="flex items-center gap-[9px]">
             <span className="breathe-dot h-[6px] w-[6px] rounded-full bg-star shadow-[0_0_8px_var(--color-star)]" />
-            <span className="font-[family-name:var(--font-pixel)] text-[9px] tracking-[0.22em] text-paper-ink-soft/75">CONTINUAR ESCRIBIENDO</span>
+            <span className="font-[family-name:var(--font-pixel)] text-[9px] tracking-[0.22em] text-paper-ink-soft/75">ÚLTIMA PÁGINA</span>
           </div>
           <p className="mt-[17px] text-center font-[family-name:var(--font-serif)] text-[22px] italic leading-[24px] text-paper-ink">Nota rápida</p>
           <div className="mt-[20px] border-t border-dashed border-paper-ink/20" />
           <div className="mt-[13px] flex items-center justify-between">
-            <span className="truncate font-[family-name:var(--font-pixel)] text-[8px] uppercase tracking-[0.09em] text-paper-ink-soft/40">NOTA DEL 26 JUL 2026 · 26 JUL</span>
+            <span className="truncate font-[family-name:var(--font-pixel)] text-[8px] uppercase tracking-[0.09em] text-paper-ink-soft/40">EDITADA EL 26 JUL 2026</span>
             <span className="ml-[8px] flex shrink-0 items-center gap-[4px] font-[family-name:var(--font-sans)] text-[11px] font-semibold" style={{ color: "var(--color-star)" }}>
               Retomar
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M5 12h14M13 6l6 6-6 6" /></svg>
@@ -664,7 +677,7 @@ export default function PhoneShowcase({
           className="relative overflow-hidden rounded-[1.75rem] bg-cosmos-void font-[family-name:var(--font-sans)] text-mockup-ink isolate [mask-image:linear-gradient(white,white)]"
           style={{ aspectRatio: `${DESIGN_W} / ${DESIGN_H}` }}
         >
-          <MockupStarfield className="absolute inset-0 h-full w-full opacity-80" starCount={120} starScale={scale} />
+          <MockupStarfield className="absolute inset-0 h-full w-full" />
           <span className="absolute left-1/2 top-[9px] z-30 h-[7px] w-[7px] -translate-x-1/2 rounded-full bg-black ring-1 ring-white/10" />
 
           <div

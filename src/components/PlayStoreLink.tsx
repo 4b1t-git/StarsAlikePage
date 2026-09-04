@@ -1,4 +1,3 @@
-import * as motion from "motion/react-client";
 import { PLAY_STORE_URL } from "@/lib/site";
 
 type PlayStoreLinkProps = {
@@ -11,13 +10,10 @@ export default function PlayStoreLink({
   className = "",
 }: PlayStoreLinkProps) {
   return (
-    <motion.a
+    <a
       href={PLAY_STORE_URL}
       aria-label="Descargar Stars Alike en Google Play"
-      whileHover={{ opacity: 0.94 }}
-      whileTap={{ opacity: 0.82 }}
-      transition={{ duration: 0.15 }}
-      className={`group inline-flex items-center justify-center bg-paper-bright text-cosmos-void shadow-[0_16px_45px_rgba(0,0,0,0.35)] transition-colors duration-300 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-star ${
+      className={`group inline-flex items-center justify-center bg-paper-bright text-cosmos-void shadow-[0_16px_45px_rgba(0,0,0,0.35)] transition-[background-color,opacity] duration-150 hover:bg-white hover:opacity-[0.94] active:opacity-[0.82] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-star ${
         compact
           ? "min-h-9 gap-2 rounded-lg px-3 py-1.5"
           : "min-h-12 gap-3 rounded-2xl px-5 py-3"
@@ -47,6 +43,6 @@ export default function PlayStoreLink({
           Google Play
         </span>
       </span>
-    </motion.a>
+    </a>
   );
 }

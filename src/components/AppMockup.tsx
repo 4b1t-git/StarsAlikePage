@@ -99,7 +99,7 @@ export function AppMockup({ active = true }: { active?: boolean }) {
 
   return (
     <div ref={rootRef} className="absolute inset-0 overflow-hidden bg-cosmos-void font-[family-name:var(--font-sans)] text-mockup-ink">
-      <MockupStarfield active={active} className="absolute inset-0 h-full w-full opacity-80" />
+      <MockupStarfield active={active} className="absolute inset-0 h-full w-full" />
 
       <div
         className="absolute left-0 top-0 origin-top-left"

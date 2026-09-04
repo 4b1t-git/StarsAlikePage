@@ -15,7 +15,7 @@ const TENETS = [
 
 export default function PullQuote() {
   return (
-    <section className="cv-auto relative px-6 py-32 sm:py-40">
+    <section className="cv-auto relative px-6 py-24 sm:py-36">
       <div className="mx-auto max-w-5xl text-center">
         <p className="eyebrow">MANIFIESTO</p>
         <h2 className="mt-6 font-[family-name:var(--font-serif)] font-light leading-[0.95] text-balance text-paper-bright text-[clamp(2.75rem,8vw,6rem)]">

@@ -5,6 +5,8 @@ import { useEffect, useRef } from "react";
 type Star = {
   rx: number;
   ry: number;
+  x: number;
+  y: number;
   radius: number;
   baseAlpha: number;
   speed: number;
@@ -42,6 +44,8 @@ function newStar(): Star {
   return {
     rx: Math.random(),
     ry: Math.random(),
+    x: 0,
+    y: 0,
     radius: Math.random() * 2 + 0.5,
     baseAlpha: baseAlpha,
     speed: (Math.random() * 0.0253 + 0.0046) * 0.5,
@@ -78,21 +82,23 @@ export default function StarryBackground({ mode = "hero" }: Props) {
 
     let w = 0;
     let h = 0;
+    let renderDpr = 1;
     const stars: Star[] = [];
     const SHOOTER_MAX = isMobile ? 10 : 16;
     let shooters: WarpStar[] = [];
-    let starsInterval = 0;
+    let starsRaf = 0;
     let shooterRaf = 0;
     let shootTimer = 0;
     let shooterFrame = 0;
     let visible = true;
-    let onscreen = true;
+    let onscreen = false;
     let previousShooterFrame = performance.now();
+    let lastStarDraw = 0;
     let lastShooterDraw = 0;
     let accentColor = "#40E0D0";
     const starsStartedAt = performance.now();
     const STAR_FRAME_MS = 1000 / 24;
-    const SHOOTER_FRAME_MS = 1000 / 60;
+    const SHOOTER_FRAME_MS = 1000 / (isMobile ? 30 : 45);
 
     const refreshAccent = () => {
       const nextAccent = getComputedStyle(shootersCanvas)
@@ -102,19 +108,54 @@ export default function StarryBackground({ mode = "hero" }: Props) {
     };
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       w = starsCanvas.clientWidth;
       h = starsCanvas.clientHeight;
-      for (const canvas of [starsCanvas, shootersCanvas]) {
-        canvas.width = Math.max(1, Math.round(w * dpr));
-        canvas.height = Math.max(1, Math.round(h * dpr));
+      const naturalDpr = Math.min(window.devicePixelRatio || 1, 1.25);
+      const pixelBudget = isMobile ? 700_000 : 1_300_000;
+      renderDpr = Math.max(
+        0.6,
+        Math.min(naturalDpr, Math.sqrt(pixelBudget / Math.max(1, w * h))),
+      );
+      starsCanvas.width = Math.max(1, Math.round(w * renderDpr));
+      starsCanvas.height = Math.max(1, Math.round(h * renderDpr));
+      starsCtx.setTransform(renderDpr, 0, 0, renderDpr, 0, 0);
+      if (shootersCanvas.width > 1 || shootersCanvas.height > 1) {
+        shootersCanvas.width = Math.max(1, Math.round(w * renderDpr));
+        shootersCanvas.height = Math.max(1, Math.round(h * renderDpr));
+        shootersCtx.setTransform(renderDpr, 0, 0, renderDpr, 0, 0);
       }
-      starsCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      shootersCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
       refreshAccent();
       if (stars.length === 0) {
         for (let i = 0; i < STAR_COUNT; i++) stars.push(newStar());
       }
+      for (const star of stars) {
+        star.x = star.rx * w;
+        star.y = star.ry * h;
+      }
+    };
+
+    const prepareShootersBuffer = () => {
+      const targetWidth = Math.max(1, Math.round(w * renderDpr));
+      const targetHeight = Math.max(1, Math.round(h * renderDpr));
+      if (
+        shootersCanvas.width !== targetWidth ||
+        shootersCanvas.height !== targetHeight
+      ) {
+        shootersCanvas.width = targetWidth;
+        shootersCanvas.height = targetHeight;
+        shootersCtx.setTransform(renderDpr, 0, 0, renderDpr, 0, 0);
+      }
+    };
+
+    const releaseShootersBuffer = () => {
+      shootersCanvas.width = 1;
+      shootersCanvas.height = 1;
+    };
+
+    const releaseBuffers = () => {
+      starsCanvas.width = 1;
+      starsCanvas.height = 1;
+      releaseShootersBuffer();
     };
 
     const makeWarpStar = (
@@ -203,39 +244,54 @@ export default function StarryBackground({ mode = "hero" }: Props) {
 
     const drawStatic = () => {
       starsCtx.clearRect(0, 0, w, h);
+      starsCtx.fillStyle = "#ffffff";
       for (const s of stars) {
+        starsCtx.globalAlpha = s.baseAlpha;
         starsCtx.beginPath();
-        starsCtx.fillStyle = `rgba(255,255,255,${s.baseAlpha})`;
-        starsCtx.arc(s.rx * w, s.ry * h, s.radius, 0, Math.PI * 2);
+        starsCtx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
         starsCtx.fill();
       }
+      starsCtx.globalAlpha = 1;
     };
 
     const drawStars = () => {
       const frame = (performance.now() - starsStartedAt) / 16.6667;
       starsCtx.clearRect(0, 0, w, h);
+      starsCtx.fillStyle = "#ffffff";
       for (const s of stars) {
         s.alpha = Math.max(
           0.05,
           Math.min(1, s.baseAlpha + Math.sin(frame * s.speed) * 0.18),
         );
 
+        starsCtx.globalAlpha = s.alpha;
         starsCtx.beginPath();
-        starsCtx.fillStyle = `rgba(255,255,255,${s.alpha})`;
-        starsCtx.arc(s.rx * w, s.ry * h, s.radius, 0, Math.PI * 2);
+        starsCtx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
         starsCtx.fill();
       }
+      starsCtx.globalAlpha = 1;
+    };
+
+    const stepStars = (timestamp: number) => {
+      starsRaf = 0;
+      if (!visible || !onscreen) return;
+      if (timestamp - lastStarDraw >= STAR_FRAME_MS - 1) {
+        lastStarDraw = timestamp;
+        drawStars();
+      }
+      starsRaf = requestAnimationFrame(stepStars);
     };
 
     const startStars = () => {
-      if (reducedMotion || starsInterval || !visible || !onscreen) return;
+      if (reducedMotion || starsRaf || !visible || !onscreen) return;
       drawStars();
-      starsInterval = window.setInterval(drawStars, STAR_FRAME_MS);
+      lastStarDraw = performance.now();
+      starsRaf = requestAnimationFrame(stepStars);
     };
 
     const stopStars = () => {
-      window.clearInterval(starsInterval);
-      starsInterval = 0;
+      cancelAnimationFrame(starsRaf);
+      starsRaf = 0;
     };
 
     const stepShooters = (timestamp: number) => {
@@ -331,6 +387,8 @@ export default function StarryBackground({ mode = "hero" }: Props) {
       shooters = survivors;
       if (shooters.length > 0) {
         shooterRaf = requestAnimationFrame(stepShooters);
+      } else {
+        releaseShootersBuffer();
       }
     };
 
@@ -342,6 +400,7 @@ export default function StarryBackground({ mode = "hero" }: Props) {
         !visible ||
         !onscreen
       ) return;
+      prepareShootersBuffer();
       previousShooterFrame = performance.now();
       lastShooterDraw = 0;
       refreshAccent();
@@ -352,7 +411,7 @@ export default function StarryBackground({ mode = "hero" }: Props) {
       cancelAnimationFrame(shooterRaf);
       shooterRaf = 0;
       shooters = [];
-      shootersCtx.clearRect(0, 0, w, h);
+      releaseShootersBuffer();
     };
 
     const syncActivity = () => {
@@ -398,8 +457,8 @@ export default function StarryBackground({ mode = "hero" }: Props) {
       syncActivity();
     };
 
-    resize();
     const ro = new ResizeObserver(() => {
+      if (!onscreen) return;
       resize();
       if (reducedMotion) drawStatic();
       else if (visible && onscreen) drawStars();
@@ -410,7 +469,15 @@ export default function StarryBackground({ mode = "hero" }: Props) {
       (entries) => {
         const vis = entries[0]?.isIntersecting ?? true;
         onscreen = vis;
-        syncActivity();
+        if (vis) {
+          resize();
+          if (reducedMotion) drawStatic();
+          else syncActivity();
+        } else {
+          stopStars();
+          stopShooters();
+          releaseBuffers();
+        }
         if (isHero) {
           window.dispatchEvent(
             new CustomEvent("stars:hero-visible", { detail: vis }),
@@ -425,7 +492,15 @@ export default function StarryBackground({ mode = "hero" }: Props) {
       if (ambient) {
         const ce = e as CustomEvent<boolean>;
         onscreen = !ce.detail;
-        syncActivity();
+        if (onscreen) {
+          resize();
+          if (reducedMotion) drawStatic();
+          else syncActivity();
+        } else {
+          stopStars();
+          stopShooters();
+          releaseBuffers();
+        }
       }
     };
     if (ambient) {
@@ -435,16 +510,11 @@ export default function StarryBackground({ mode = "hero" }: Props) {
     document.addEventListener("visibilitychange", onVisibility);
     window.addEventListener("stars:burst", onBurst as EventListener);
 
-    if (reducedMotion) {
-      drawStatic();
-    } else {
-      startStars();
-      scheduleNext();
-    }
+    if (!reducedMotion) scheduleNext();
 
     return () => {
       stopStars();
-      cancelAnimationFrame(shooterRaf);
+      stopShooters();
       window.clearTimeout(shootTimer);
       ro.disconnect();
       io.disconnect();
@@ -460,10 +530,14 @@ export default function StarryBackground({ mode = "hero" }: Props) {
     <div className="pointer-events-none absolute inset-0" aria-hidden="true">
       <canvas
         ref={starsCanvasRef}
+        width={1}
+        height={1}
         className="absolute inset-0 h-full w-full"
       />
       <canvas
         ref={shootersCanvasRef}
+        width={1}
+        height={1}
         className="absolute inset-0 h-full w-full"
       />
     </div>

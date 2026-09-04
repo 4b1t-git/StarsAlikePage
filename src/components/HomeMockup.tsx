@@ -154,7 +154,7 @@ export function HomeMockup({ active = true }: { active?: boolean }) {
       className="absolute inset-0 overflow-hidden bg-cosmos-void font-[family-name:var(--font-sans)] text-mockup-ink"
     >
       {/* Twinkling starfield — 1:1 port of StarfieldBackground.kt */}
-      <MockupStarfield active={active} className="absolute inset-0 h-full w-full opacity-80" />
+      <MockupStarfield active={active} className="absolute inset-0 h-full w-full" />
 
       {/* Fixed 1280×800 design canvas, scaled to fill the frame width. */}
       <div
@@ -243,7 +243,7 @@ export function HomeMockup({ active = true }: { active?: boolean }) {
             <span className="flex items-center gap-2">
               <span className="breathe-dot h-1.5 w-1.5 rounded-full bg-star shadow-[0_0_8px_var(--color-star)]" />
               <span className="font-[family-name:var(--font-pixel)] text-[10.5px] tracking-[0.22em] text-paper-ink-soft/75">
-                CONTINUAR ESCRIBIENDO
+                ÚLTIMA PÁGINA
               </span>
             </span>
             <span className="mt-[18px] block text-center font-[family-name:var(--font-serif)] text-[22px] italic leading-[24px] text-paper-ink">

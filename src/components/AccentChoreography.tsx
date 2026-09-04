@@ -2,10 +2,8 @@
 
 import { useEffect } from "react";
 import {
-  ACCENT_CYCLE_MS,
   ACCENT_PALETTES,
   ACCENT_SELECTION_MS,
-  ACCENT_SWEEP_FRACTION,
 } from "@/lib/accentPalettes";
 
 type Oklab = { l: number; a: number; b: number };
@@ -83,24 +81,22 @@ const PALETTE_COLORS = ACCENT_PALETTES.map((palette) =>
   hexToOklab(palette.color),
 );
 
-/**
- * One frame clock for the complete accent system. It mirrors the app's cozy
- * cadence: an 11s cycle, an 8.25s smoothstep sweep, then a 2.75s visual rest.
- * The same progress drives the hero's highlight band and every --color-star
- * consumer, keeping the whole page phase-locked without React re-renders.
- */
+/** Keeps the global accent idle until the visitor chooses a color. A short,
+ * frame-capped bridge preserves the soft transition without continuously
+ * invalidating styles and repainting the entire page. */
 export default function AccentChoreography() {
   useEffect(() => {
     const root = document.documentElement;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let animationFrame = 0;
-    let baseIndex = 0;
-    let activeIndex = -1;
-    let cycleStartedAt = performance.now();
+    let activeIndex = 0;
     let currentColor = PALETTE_COLORS[0];
     let bridge: AccentBridge | null = null;
     let lastFromColor: Oklab | null = null;
     let lastToColor: Oklab | null = null;
+    let lastPaintAt = 0;
+
+    const FRAME_MS = 1000 / 30;
 
     const announcePalette = (index: number) => {
       if (activeIndex === index) return;
@@ -137,7 +133,11 @@ export default function AccentChoreography() {
     };
 
     const tick = (now: number) => {
-      if (bridge) {
+      animationFrame = 0;
+      if (!bridge || document.hidden) return;
+
+      if (now - lastPaintAt >= FRAME_MS - 1) {
+        lastPaintAt = now;
         const raw = clamp01((now - bridge.startedAt) / ACCENT_SELECTION_MS);
         const eased = smoothstep(raw);
         applyFrame(
@@ -148,53 +148,20 @@ export default function AccentChoreography() {
         );
 
         if (raw >= 1) {
-          baseIndex = bridge.targetIndex;
-          cycleStartedAt = now;
           currentColor = bridge.to;
+          announcePalette(bridge.targetIndex);
+          applyFrame(bridge.to, 1, bridge.to, bridge.to);
           bridge = null;
+          return;
         }
-      } else {
-        const elapsed = Math.max(0, now - cycleStartedAt);
-        const completedCycles = Math.floor(elapsed / ACCENT_CYCLE_MS);
-        const index = (baseIndex + completedCycles) % ACCENT_PALETTES.length;
-        const nextIndex = (index + 1) % ACCENT_PALETTES.length;
-        const cycleProgress = (elapsed % ACCENT_CYCLE_MS) / ACCENT_CYCLE_MS;
-        const sweepRaw = Math.min(
-          cycleProgress / ACCENT_SWEEP_FRACTION,
-          1,
-        );
-        const eased = smoothstep(sweepRaw);
-
-        // The picker ring follows the nearest palette while the page blends
-        // between two accents, instead of lagging behind during the rest phase.
-        announcePalette(eased < 0.5 ? index : nextIndex);
-        applyFrame(
-          mixOklab(PALETTE_COLORS[index], PALETTE_COLORS[nextIndex], eased),
-          eased,
-          PALETTE_COLORS[index],
-          PALETTE_COLORS[nextIndex],
-        );
       }
 
       animationFrame = window.requestAnimationFrame(tick);
     };
 
-    const start = () => {
+    const stop = () => {
       window.cancelAnimationFrame(animationFrame);
-      if (reduceMotion.matches) {
-        bridge = null;
-        activeIndex = -1;
-        announcePalette(baseIndex);
-        applyFrame(
-          PALETTE_COLORS[baseIndex],
-          1,
-          PALETTE_COLORS[baseIndex],
-          PALETTE_COLORS[baseIndex],
-        );
-        return;
-      }
-      cycleStartedAt = performance.now();
-      animationFrame = window.requestAnimationFrame(tick);
+      animationFrame = 0;
     };
 
     const onSelect = (event: Event) => {
@@ -204,10 +171,12 @@ export default function AccentChoreography() {
       );
       if (requestedIndex < 0 || requestedIndex >= ACCENT_PALETTES.length) return;
 
-      announcePalette(requestedIndex);
-      if (reduceMotion.matches) {
-        baseIndex = requestedIndex;
+      if (reduceMotion.matches || document.hidden) {
+        stop();
         bridge = null;
+        currentColor = PALETTE_COLORS[requestedIndex];
+        activeIndex = -1;
+        announcePalette(requestedIndex);
         applyFrame(
           PALETTE_COLORS[requestedIndex],
           1,
@@ -223,17 +192,42 @@ export default function AccentChoreography() {
         startedAt: performance.now(),
         targetIndex: requestedIndex,
       };
+      lastPaintAt = 0;
+      stop();
+      animationFrame = window.requestAnimationFrame(tick);
     };
 
-    const onMotionPreference = () => start();
+    const onMotionPreference = () => {
+      if (!reduceMotion.matches || !bridge) return;
+      const targetIndex = bridge.targetIndex;
+      stop();
+      bridge = null;
+      currentColor = PALETTE_COLORS[targetIndex];
+      activeIndex = -1;
+      announcePalette(targetIndex);
+      applyFrame(currentColor, 1, currentColor, currentColor);
+    };
+    const onVisibility = () => {
+      if (!document.hidden || !bridge) return;
+      const targetIndex = bridge.targetIndex;
+      stop();
+      bridge = null;
+      currentColor = PALETTE_COLORS[targetIndex];
+      activeIndex = -1;
+      announcePalette(targetIndex);
+      applyFrame(currentColor, 1, currentColor, currentColor);
+    };
+
     window.addEventListener("accent:select", onSelect);
     reduceMotion.addEventListener("change", onMotionPreference);
-    start();
+    document.addEventListener("visibilitychange", onVisibility);
+    applyFrame(currentColor, 1, currentColor, currentColor);
 
     return () => {
-      window.cancelAnimationFrame(animationFrame);
+      stop();
       window.removeEventListener("accent:select", onSelect);
       reduceMotion.removeEventListener("change", onMotionPreference);
+      document.removeEventListener("visibilitychange", onVisibility);
       root.style.removeProperty("--color-star");
       root.style.removeProperty("--color-star-from");
       root.style.removeProperty("--color-star-to");

@@ -57,7 +57,7 @@ export default function HistoryMockup({ active }: { active: boolean }) {
 
   return (
     <div ref={rootRef} className="absolute inset-0 overflow-hidden bg-cosmos-void font-[family-name:var(--font-sans)] text-mockup-ink">
-      <MockupStarfield active={active} className="absolute inset-0 h-full w-full opacity-70" />
+      <MockupStarfield active={active} className="absolute inset-0 h-full w-full" />
 
       <div className="absolute left-0 top-0 origin-top-left" style={{ width: DESIGN_W, height: DESIGN_H, transform: `scale(${scale})`, visibility: scale ? "visible" : "hidden" }}>
         <span className="absolute bottom-[34px] left-[508px] top-[34px] w-px bg-mockup-panel" />

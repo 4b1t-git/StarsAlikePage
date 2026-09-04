@@ -224,6 +224,195 @@ section[id] {
 @keyframes dotBreathe { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 .breathe-dot { animation: dotBreathe 2.6s ease-in-out infinite; }
 
+/* Screenshot card overlay: exact port of the app's breathing accent border.
+   All cards share the document animation clock: one eased lap over 75% of an
+   11s cycle, a sin(pi·t) intensity envelope, then a 25% silent rest. */
+@property --mockup-comet-angle {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 0deg;
+}
+
+@property --mockup-comet-wave {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 0deg;
+}
+
+@property --mockup-editorial-progress {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@keyframes mockupCometSweep {
+  0% { --mockup-comet-angle: 0deg; }
+  75%, 100% { --mockup-comet-angle: 360deg; }
+}
+
+@keyframes mockupCometBreath {
+  0% { --mockup-comet-wave: 0deg; }
+  75%, 100% { --mockup-comet-wave: 180deg; }
+}
+
+@keyframes mockupEditorialSweep {
+  0% { --mockup-editorial-progress: 0; }
+  75%, 100% { --mockup-editorial-progress: 1; }
+}
+
+.mockup-comet-clock {
+  container-type: inline-size;
+  animation:
+    mockupCometSweep 11s cubic-bezier(0.333333, 0, 0.666667, 1) infinite,
+    mockupCometBreath 11s linear infinite,
+    mockupEditorialSweep 11s linear infinite;
+}
+
+.mockup-card-slot {
+  background: #050505;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
+.mockup-breath-card {
+  transform-origin: center;
+  transition: transform 280ms linear(
+    0,
+    0.42 14%,
+    0.69 28%,
+    0.85 42%,
+    0.94 58%,
+    0.985 76%,
+    1
+  );
+  will-change: transform;
+}
+
+.mockup-breath-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  border: 2px solid transparent;
+  border-radius: inherit;
+  background: conic-gradient(
+    from calc(var(--mockup-comet-angle) - 79.2deg),
+    color-mix(in srgb, var(--mockup-accent) 16%, transparent) 0deg,
+    color-mix(in srgb, var(--mockup-accent) calc(16% + sin(var(--mockup-comet-wave)) * 3.1797%), transparent) 9.9deg,
+    color-mix(in srgb, var(--mockup-accent) calc(16% + sin(var(--mockup-comet-wave)) * 11.5625%), transparent) 19.8deg,
+    color-mix(in srgb, var(--mockup-accent) calc(16% + sin(var(--mockup-comet-wave)) * 23.4141%), transparent) 29.7deg,
+    color-mix(in srgb, var(--mockup-accent) calc(16% + sin(var(--mockup-comet-wave)) * 37%), transparent) 39.6deg,
+    color-mix(in srgb, var(--mockup-accent) calc(16% + sin(var(--mockup-comet-wave)) * 50.5859%), transparent) 49.5deg,
+    color-mix(in srgb, var(--mockup-accent) calc(16% + sin(var(--mockup-comet-wave)) * 62.4375%), transparent) 59.4deg,
+    color-mix(in srgb, var(--mockup-accent) calc(16% + sin(var(--mockup-comet-wave)) * 70.8203%), transparent) 69.3deg,
+    color-mix(in srgb, var(--mockup-accent) calc(16% + sin(var(--mockup-comet-wave)) * 74%), transparent) 79.2deg,
+    color-mix(in srgb, var(--mockup-accent) calc(16% + sin(var(--mockup-comet-wave)) * 70.8203%), transparent) 89.1deg,
+    color-mix(in srgb, var(--mockup-accent) calc(16% + sin(var(--mockup-comet-wave)) * 62.4375%), transparent) 99deg,
+    color-mix(in srgb, var(--mockup-accent) calc(16% + sin(var(--mockup-comet-wave)) * 50.5859%), transparent) 108.9deg,
+    color-mix(in srgb, var(--mockup-accent) calc(16% + sin(var(--mockup-comet-wave)) * 37%), transparent) 118.8deg,
+    color-mix(in srgb, var(--mockup-accent) calc(16% + sin(var(--mockup-comet-wave)) * 23.4141%), transparent) 128.7deg,
+    color-mix(in srgb, var(--mockup-accent) calc(16% + sin(var(--mockup-comet-wave)) * 11.5625%), transparent) 138.6deg,
+    color-mix(in srgb, var(--mockup-accent) calc(16% + sin(var(--mockup-comet-wave)) * 3.1797%), transparent) 148.5deg,
+    color-mix(in srgb, var(--mockup-accent) 16%, transparent) 158.4deg,
+    color-mix(in srgb, var(--mockup-accent) 16%, transparent) 360deg
+  ) border-box;
+  -webkit-mask:
+    linear-gradient(#000 0 0) padding-box,
+    linear-gradient(#000 0 0) border-box;
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) padding-box,
+    linear-gradient(#000 0 0) border-box;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.mockup-card-slot:active .mockup-breath-card {
+  transform: scale(0.96);
+  transition-duration: 90ms;
+  transition-timing-function: ease-out;
+}
+
+/* Header editorial sweep. The lower solid layer keeps the text at its ink
+   color outside the no-repeat accent band, matching Compose's Clamp behavior. */
+.mockup-editorial-phrase-slot {
+  position: absolute;
+  top: 14%;
+  left: 8.39%;
+  display: flex;
+  width: 37.2%;
+  height: 3.15%;
+  align-items: center;
+  background: #030303;
+}
+
+.mockup-editorial-phrase {
+  --mockup-editorial-text-width: 0px;
+  --mockup-editorial-band-width: 0px;
+  --mockup-editorial-base: rgb(241 238 232 / 70%);
+  display: block;
+  width: max-content;
+  color: transparent;
+  font-family: var(--font-fraunces);
+  font-size: 1.214cqw;
+  font-style: italic;
+  font-variation-settings: "opsz" 16;
+  font-weight: 400;
+  line-height: 1.518cqw;
+  white-space: nowrap;
+  background-image:
+    linear-gradient(
+      90deg,
+      var(--mockup-editorial-base) 0%,
+      var(--mockup-accent) 30%,
+      var(--mockup-accent) 70%,
+      var(--mockup-editorial-base) 100%
+    ),
+    linear-gradient(
+      var(--mockup-editorial-base),
+      var(--mockup-editorial-base)
+    );
+  background-repeat: no-repeat;
+  background-position:
+    calc(
+      -1 * var(--mockup-editorial-band-width) +
+      var(--mockup-editorial-progress) *
+      (var(--mockup-editorial-text-width) + var(--mockup-editorial-band-width))
+    ) 0,
+    0 0;
+  background-size:
+    var(--mockup-editorial-band-width) 100%,
+    100% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes defaultCoverFlareScale {
+  from { transform: translate(-50%, -50%) scale(0.95); }
+  to { transform: translate(-50%, -50%) scale(1.05); }
+}
+
+@keyframes defaultCoverFlareGlow {
+  from {
+    opacity: 0.45;
+    filter: drop-shadow(0 0 7px rgb(64 224 208 / 45%));
+  }
+  to {
+    opacity: 1;
+    filter: drop-shadow(0 0 18px rgb(64 224 208 / 90%));
+  }
+}
+
+.default-cover-flare-scale {
+  animation: defaultCoverFlareScale 2600ms ease-in-out infinite alternate;
+}
+
+.default-cover-flare-glow {
+  animation: defaultCoverFlareGlow 2000ms linear infinite alternate;
+}
+
 @keyframes sheetUp {
   from { transform: translateY(100%); }
   to   { transform: translateY(0); }
@@ -244,7 +433,7 @@ section[id] {
 
 /* Paper grain — a 4px tile with a tiny dark dot (rememberPaperGrainBrush.kt:
    color #3A2A12 at ~0.08 alpha, 0.55dp dot). Tiled across the cream paper as a
-   subtle texture; used by the Diarios book cards and the "continuar escribiendo"
+   subtle texture; used by the Diarios book cards and the latest-page
    card. Layered over the vertical cream gradient. */
 .paper-grain {
   background-color: var(--color-paper-bright);
@@ -346,6 +535,12 @@ section[id] {
       28% 78%,
       82% 68%;
   }
+}
+
+/* The mesh itself is rasterized once; only its compositor layer moves. */
+@keyframes meshFloat {
+  0%, 100% { transform: translate3d(-2%, -1%, 0) scale(1); }
+  50% { transform: translate3d(2%, 1.5%, 0) scale(1.035); }
 }
 
 @keyframes meshSpin {

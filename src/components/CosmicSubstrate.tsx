@@ -1,5 +1,3 @@
-"use client";
-
 import StarryBackground from "./StarryBackground";
 import GradientMesh from "./GradientMesh";
 import GrainOverlay from "./GrainOverlay";

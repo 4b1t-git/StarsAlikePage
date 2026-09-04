@@ -2,7 +2,7 @@ export default function GradientMesh() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0"
+      className="pointer-events-none absolute -inset-[20%]"
       style={{
         backgroundImage: `
           radial-gradient(ellipse 70% 60% at 20% 30%, var(--mesh-2) 0%, transparent 65%),
@@ -12,10 +12,10 @@ export default function GradientMesh() {
         `,
         backgroundSize: "160% 160%, 150% 150%, 170% 160%, 150% 150%",
         backgroundRepeat: "no-repeat",
-        animation: "meshDrift 60s ease-in-out infinite",
+        animation: "meshFloat 60s ease-in-out infinite",
         mixBlendMode: "screen",
         opacity: 0.45,
-        willChange: "background-position",
+        willChange: "transform",
       }}
     />
   );

@@ -12,5 +12,6 @@ export function asset(path: string): string {
 
 /** CSS `background` shorthand for a note cover stored in `public/mockups`. */
 export function mockupCover(file: string): string {
-  return `url('${asset(`/mockups/${file}`)}') center/cover`;
+  const optimizedFile = file.replace(/\.png$/i, ".webp");
+  return `url('${asset(`/mockups/${optimizedFile}`)}') center/cover`;
 }

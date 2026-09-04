@@ -12,7 +12,7 @@ export default function MarqueeTags() {
   return (
     <section
       aria-label="Etiquetas de Stars Alike"
-      className="relative overflow-hidden border-y border-cosmos-fog/60 bg-cosmos-void/40 py-10 backdrop-blur-[2px]"
+      className="relative overflow-hidden border-y border-cosmos-fog/60 bg-cosmos-void/80 py-10"
     >
       <div className="flex w-max whitespace-nowrap group">
         {/* Render the set multiple times to fill ultra-wide screens, animating each track perfectly by 100% of its width */}

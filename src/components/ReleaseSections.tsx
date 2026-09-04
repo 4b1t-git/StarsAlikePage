@@ -4,18 +4,39 @@ import PlayStoreLink from "@/components/PlayStoreLink";
 const PILLARS = [
   {
     n: "01",
-    title: "Escribe sin fricción.",
-    body: "Un editor por bloques para texto, listas, formato enriquecido, imágenes y dictado. La herramienta aparece cuando la necesitas y se aparta cuando estás escribiendo.",
+    title: "Captura ideas antes de que se escapen.",
+    body: "Escribe, dicta, añade imágenes y da formato sin salir de tu ritmo. El editor por bloques aparece cuando lo necesitas y se aparta cuando vuelves a escribir.",
   },
   {
     n: "02",
-    title: "Conecta lo que piensas.",
-    body: "Une páginas con wikilinks, descubre backlinks y contempla tus ideas como una constelación que se vuelve más rica con cada nota.",
+    title: "Vuelve a encontrar lo que pensabas.",
+    body: "Une páginas con wikilinks, descubre backlinks y contempla relaciones que una carpeta no podría mostrarte.",
   },
   {
     n: "03",
-    title: "Hazlo verdaderamente tuyo.",
-    body: "Elige acentos, superficies y detalles que evolucionan contigo. Stars Alike se siente personal porque no obliga a todos a habitar el mismo espacio.",
+    title: "Haz que tu espacio invite a volver.",
+    body: "Elige acentos, superficies y detalles que evolucionan contigo. Stars Alike se siente personal porque no obliga a todos a pensar de la misma forma.",
+  },
+] as const;
+
+const STEPS = [
+  {
+    n: "01",
+    title: "Captura",
+    body: "Guarda una frase al vuelo o desarrolla una idea completa con bloques, imágenes y dictado.",
+    cue: "idea → página",
+  },
+  {
+    n: "02",
+    title: "Conecta",
+    body: "Relaciona páginas con wikilinks y deja que los backlinks revelen lo que ya estaba unido.",
+    cue: "página ↔ página",
+  },
+  {
+    n: "03",
+    title: "Redescubre",
+    body: "Vuelve a tus notas desde etiquetas, calendario y constelación con el contexto todavía vivo.",
+    cue: "notas → constelación",
   },
 ] as const;
 
@@ -62,7 +83,7 @@ const FAQ = [
 
 export function ProductPillars() {
   return (
-    <section id="funciones" className="cv-auto relative px-6 py-28 sm:py-40">
+    <section id="funciones" className="cv-auto relative px-6 pt-20 pb-0 sm:pt-32 sm:pb-0">
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-3xl text-center">
           <p className="eyebrow">SIMPLE POR FUERA · POTENTE POR DENTRO</p>
@@ -105,9 +126,69 @@ export function ProductPillars() {
   );
 }
 
+export function HowItWorks() {
+  return (
+    <section
+      id="como-funciona"
+      className="cv-auto relative border-y border-white/[0.06] bg-white/[0.018] px-6 py-20 sm:py-32"
+    >
+      <div className="mx-auto max-w-6xl">
+        <div className="grid gap-7 lg:grid-cols-12 lg:items-end">
+          <div className="lg:col-span-7">
+            <p className="eyebrow">DE LA IDEA A LA CONSTELACIÓN</p>
+            <h2 className="mt-4 font-[family-name:var(--font-serif)] text-4xl font-light leading-[1.04] text-balance text-paper-bright sm:text-6xl">
+              Tres pasos.
+              <br />
+              <span className="editorial-italic text-star">
+                Un lugar para volver.
+              </span>
+            </h2>
+          </div>
+          <p className="max-w-md text-base leading-7 text-paper-bright/70 lg:col-span-4 lg:col-start-9">
+            Las ideas no llegan ordenadas. Stars Alike te ayuda a capturarlas,
+            relacionarlas y encontrarlas de nuevo cuando más las necesitas.
+          </p>
+        </div>
+
+        <ol className="mt-14 grid border-y border-white/10 lg:grid-cols-3 lg:divide-x lg:divide-white/10">
+          {STEPS.map((step, index) => (
+            <li
+              key={step.n}
+              className="group relative border-b border-white/10 px-1 py-9 last:border-b-0 lg:border-b-0 lg:px-9 lg:py-12 lg:first:pl-0 lg:last:pr-0"
+            >
+              <div className="flex items-center justify-between gap-4">
+                <span className="font-[family-name:var(--font-pixel)] text-xs tracking-[0.24em] text-star">
+                  {step.n}
+                </span>
+                <span className="font-[family-name:var(--font-pixel)] text-[11px] uppercase tracking-[0.16em] text-paper-bright/35 transition group-hover:text-star/70">
+                  {step.cue}
+                </span>
+              </div>
+              <h3 className="mt-8 font-[family-name:var(--font-serif)] text-3xl font-light text-paper-bright">
+                {step.title}
+              </h3>
+              <p className="mt-3 max-w-sm text-[15px] leading-7 text-paper-bright/68">
+                {step.body}
+              </p>
+              {index < STEPS.length - 1 && (
+                <span
+                  aria-hidden="true"
+                  className="absolute -right-3 top-1/2 z-10 hidden h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-star/25 bg-cosmos-void text-xs text-star lg:flex"
+                >
+                  →
+                </span>
+              )}
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
 export function TrustSection() {
   return (
-    <section id="privacidad" className="cv-auto relative px-6 py-24 sm:py-32">
+    <section id="privacidad" className="cv-auto relative px-6 py-20 sm:py-28">
       <div className="paper-grain mx-auto max-w-6xl overflow-hidden rounded-[2rem] border border-paper-edge/60 px-6 py-12 shadow-[0_30px_100px_rgba(0,0,0,0.35)] sm:px-12 sm:py-16">
         <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
           <div className="lg:col-span-8">
@@ -161,7 +242,7 @@ export function TrustSection() {
 
 export function FaqSection() {
   return (
-    <section id="preguntas" className="cv-auto relative px-6 py-28 sm:py-36">
+    <section id="preguntas" className="cv-auto relative px-6 py-20 sm:py-28">
       <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-12">
         <div className="lg:col-span-4">
           <p className="eyebrow">ANTES DE EMPEZAR</p>
@@ -197,7 +278,7 @@ export function FaqSection() {
 
 export function FinalReleaseCta() {
   return (
-    <section className="cv-auto relative overflow-hidden px-6 py-32 sm:py-40">
+    <section className="cv-auto relative overflow-hidden px-6 py-24 sm:py-36">
       <div
         aria-hidden="true"
         className="absolute left-1/2 top-1/2 h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-star/15 shadow-[0_0_120px_var(--color-star-ghost)]"
@@ -214,8 +295,8 @@ export function FinalReleaseCta() {
           <span className="editorial-italic text-star">ya tiene un lugar.</span>
         </h2>
         <p className="mx-auto mt-6 max-w-xl text-base leading-7 text-paper-bright/70 sm:text-lg">
-          Descarga Stars Alike y empieza a construir una constelación que solo
-          podría ser tuya.
+          Escribe, conecta y vuelve a encontrar las ideas que importan. Tu
+          constelación puede empezar hoy.
         </p>
         <div className="mt-10 flex justify-center">
           <PlayStoreLink />

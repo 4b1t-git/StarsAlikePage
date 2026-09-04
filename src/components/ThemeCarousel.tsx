@@ -1,20 +1,22 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import {
-  AnimatePresence,
-  motion,
-  useIsPresent,
-  useReducedMotion,
-} from "motion/react";
+import dynamic from "next/dynamic";
 import { HomeMockup } from "./HomeMockup";
-import { AppMockup } from "./AppMockup";
 import TabletFrame from "./TabletFrame";
 import PhoneShowcase from "./PhoneShowcase";
 import NavRail from "./NavRail";
-import ConstellationMockup from "./ConstellationMockup";
-import HistoryMockup from "./HistoryMockup";
 import { ACCENT_PALETTES } from "@/lib/accentPalettes";
+
+const loadAppMockup = () => import("./AppMockup");
+const loadConstellationMockup = () => import("./ConstellationMockup");
+const loadHistoryMockup = () => import("./HistoryMockup");
+
+const AppMockup = dynamic(() =>
+  loadAppMockup().then((module) => module.AppMockup),
+);
+const ConstellationMockup = dynamic(loadConstellationMockup);
+const HistoryMockup = dynamic(loadHistoryMockup);
 
 const THEMES = ACCENT_PALETTES;
 
@@ -27,52 +29,35 @@ const SCREENS = [
 ] as const;
 
 type CarouselDirection = "down" | "up";
-type ScreenTransition = {
+type ActiveTransition = {
+  id: number;
+  from: number;
   direction: CarouselDirection;
-  reducedMotion: boolean;
-};
-
-const screenVariants = {
-  enter: ({ direction, reducedMotion }: ScreenTransition) => ({
-    opacity: 0,
-    y: reducedMotion ? 0 : direction === "down" ? "8%" : "-8%",
-  }),
-  active: { opacity: 1, y: 0 },
-  exit: ({ direction, reducedMotion }: ScreenTransition) => ({
-    opacity: 0,
-    y: reducedMotion ? 0 : direction === "down" ? "-8%" : "8%",
-  }),
 };
 
 function CarouselScreen({
   screen,
-  transition,
+  active,
+  className = "",
+  onAnimationEnd,
 }: {
   screen: (typeof SCREENS)[number];
-  transition: ScreenTransition;
+  active: boolean;
+  className?: string;
+  onAnimationEnd?: () => void;
 }) {
-  const isPresent = useIsPresent();
   const { Component } = screen;
 
   return (
-    <motion.div
-      aria-hidden={!isPresent}
+    <div
+      aria-hidden={!active}
       className={`absolute inset-0 ${
-        isPresent ? "z-20" : "pointer-events-none z-10"
-      }`}
-      variants={screenVariants}
-      custom={transition}
-      initial="enter"
-      animate="active"
-      exit="exit"
-      transition={
-        transition.reducedMotion
-          ? { duration: 0.12, ease: "linear" }
-          : { duration: 0.38, ease: [0.4, 0, 0.2, 1] }
-      }
+        active ? "z-20" : "pointer-events-none z-10"
+      } ${className}`}
+      onAnimationEnd={onAnimationEnd}
     >
-      <Component active={isPresent} />
-    </motion.div>
+      <Component active={active} />
+    </div>
   );
 }
 
@@ -80,9 +65,10 @@ export default function ThemeCarousel() {
   const [activeTheme, setActiveTheme] = useState<string>(THEMES[0].id);
   const [surfaceStyle, setSurfaceStyle] = useState<"cosmos" | "cream">("cosmos");
   const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState<CarouselDirection>("down");
-  const shouldReduceMotion = useReducedMotion();
+  const [transition, setTransition] = useState<ActiveTransition | null>(null);
+  const transitionId = useRef(0);
   const touchX = useRef<number | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   // Follow the palette currently driving the page-wide choreography.
   useEffect(() => {
@@ -93,6 +79,46 @@ export default function ThemeCarousel() {
 
     window.addEventListener("accent:active", onActive);
     return () => window.removeEventListener("accent:active", onActive);
+  }, []);
+
+  // Fetch the other mockups shortly before the carousel approaches the
+  // viewport, so the initial page stays light and the first click is instant.
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    let idleId = 0;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    const idleWindow = window as Window & {
+      requestIdleCallback?: Window["requestIdleCallback"];
+      cancelIdleCallback?: Window["cancelIdleCallback"];
+    };
+
+    const preload = () => {
+      void Promise.all([
+        loadAppMockup(),
+        loadConstellationMockup(),
+        loadHistoryMockup(),
+      ]).catch(() => undefined);
+    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries[0]?.isIntersecting) return;
+        observer.disconnect();
+        if (idleWindow.requestIdleCallback) {
+          idleId = idleWindow.requestIdleCallback(preload, { timeout: 600 });
+        } else {
+          timeoutId = globalThis.setTimeout(preload, 80);
+        }
+      },
+      { rootMargin: "1000px" },
+    );
+    observer.observe(section);
+
+    return () => {
+      observer.disconnect();
+      if (idleId) idleWindow.cancelIdleCallback?.(idleId);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, []);
 
   function pick(id: string, themeIndex: number) {
@@ -111,7 +137,8 @@ export default function ThemeCarousel() {
     nextDirection: CarouselDirection = next > index ? "down" : "up",
   ) {
     if (next === index) return;
-    setDirection(nextDirection);
+    transitionId.current += 1;
+    setTransition({ id: transitionId.current, from: index, direction: nextDirection });
     setIndex(next);
   }
   const step = (delta: -1 | 1) =>
@@ -131,13 +158,14 @@ export default function ThemeCarousel() {
   }
 
   const screen = SCREENS[index];
-  const screenTransition = {
-    direction,
-    reducedMotion: Boolean(shouldReduceMotion),
-  } satisfies ScreenTransition;
+  const enteringClass = transition
+    ? transition.direction === "down"
+      ? "screen-enter-down"
+      : "screen-enter-up"
+    : "";
 
   return (
-    <section id="personalizacion" className="cv-auto relative border-y border-cosmos-fog/60 bg-cosmos-void/40 px-6 py-28 backdrop-blur-[2px] sm:py-36">
+    <section ref={sectionRef} id="personalizacion" className="cv-auto relative border-y border-cosmos-fog/60 bg-cosmos-void/80 px-6 py-20 sm:py-32">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
@@ -239,17 +267,29 @@ export default function ThemeCarousel() {
                 onTouchStart={onTouchStart}
                 onTouchEnd={onTouchEnd}
               >
-                <AnimatePresence
-                  initial={false}
-                  mode="sync"
-                  custom={screenTransition}
-                >
+                {transition && (
                   <CarouselScreen
-                    key={screen.id}
-                    screen={screen}
-                    transition={screenTransition}
+                    key={`outgoing-${transition.id}`}
+                    screen={SCREENS[transition.from]}
+                    active={false}
+                    className={
+                      transition.direction === "down"
+                        ? "screen-exit-up"
+                        : "screen-exit-down"
+                    }
+                    onAnimationEnd={() =>
+                      setTransition((current) =>
+                        current?.id === transition.id ? null : current,
+                      )
+                    }
                   />
-                </AnimatePresence>
+                )}
+                <CarouselScreen
+                  key={`${screen.id}-${transition?.id ?? "initial"}`}
+                  screen={screen}
+                  active
+                  className={enteringClass}
+                />
 
                 {/* NavRail */}
                 <NavRail activeIndex={index} />
@@ -281,19 +321,13 @@ export default function ThemeCarousel() {
                   aria-current={i === index}
                   className="group flex h-4 w-4 items-center justify-center rounded-full"
                 >
-                  {i === index ? (
-                    <motion.span
-                      layoutId="active-carousel-screen"
-                      className="h-2 w-6 shrink-0 rounded-full bg-star"
-                      transition={
-                        shouldReduceMotion
-                          ? { duration: 0 }
-                          : { type: "spring", stiffness: 500, damping: 35 }
-                      }
-                    />
-                  ) : (
-                    <span className="h-2 w-2 shrink-0 rounded-full bg-white/25 transition-colors duration-300 group-hover:bg-white/50" />
-                  )}
+                  <span
+                    className={`h-2 shrink-0 rounded-full transition-[width,background-color] duration-300 ${
+                      i === index
+                        ? "w-6 bg-star"
+                        : "w-2 bg-white/25 group-hover:bg-white/50"
+                    }`}
+                  />
                 </button>
               ))}
             </div>
